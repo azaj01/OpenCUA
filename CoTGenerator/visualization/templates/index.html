@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Trajectory Viewer</title>
+  <style>
+    body{font-family:sans-serif;margin:2em;background:#f8f9fa}
+    h1,h2{color:#333}
+    img{max-width:800px;border:1px solid #ccc;margin-top:10px}
+    pre{background:#f0f0f0;padding:1em;white-space:pre-wrap}
+    .step-box{margin-top:1em;padding:1em;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.1);border-radius:8px}
+    button{font-size:18px;padding:10px 20px;margin:5px;border:none;border-radius:6px;background:#007bff;color:#fff;cursor:pointer}
+    button:hover{background:#0056b3}
+    input[type=text]{font-size:18px;padding:5px;margin:5px;width:260px}
+    .meta-box{background:#f0f7ff;padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #0066cc}
+    .score,.completed{display:inline-block;padding:5px 10px;border-radius:4px;margin-right:10px;font-weight:bold}
+    .score-high{background:#d4edda;color:#155724}
+    .score-medium{background:#fff3cd;color:#856404}
+    .score-low{background:#f8d7da;color:#721c24}
+    .completed-true{background:#d4edda;color:#155724}
+    .completed-false{background:#f8d7da;color:#721c24}
+  </style>
+</head>
+<body>
+  <h1>Trajectory Viewer</h1>
+
+  <!-- ===== 工具栏 ===== -->
+  <div>
+    <label for="taskInput">Task ID / Index:</label>
+    <input type="text" id="taskInput" placeholder="0 或 01404816-23-4984…">
+    <button onclick="prevTask()">⬅️ Previous</button>
+    <button onclick="loadTask()">🔍 Load</button>
+    <button onclick="nextTask()">➡️ Next</button>
+    <button onclick="randomTask()">🎲 Random</button>
+  </div>
+
+  <!-- ===== 元数据、指令、步骤 ===== -->
+  <div id="metadata"></div>
+  <div id="instruction"></div>
+  <hr>
+  <div id="steps"></div>
+
+<script>
+/* ---------- 全局变量 ---------- */
+const totalTasks = {{ total }};   // 后端注入
+let currentTask = 0;              // 仅用于 next/prev/random
+
+/* ---------- 主加载函数 ---------- */
+function loadTask() {
+  const raw = document.getElementById('taskInput').value.trim();
+  if (!raw) { alert('请输入 Task ID 或索引'); return; }
+
+  const isNumeric = /^\d+$/.test(raw);
+  if (isNumeric) {
+    const idx = Number(raw);
+    if (idx < 0 || idx >= totalTasks) {
+      alert(`数字索引应在 0 ~ ${totalTasks - 1} 之间`);
+      return;
+    }
+    currentTask = idx;                  // 同步 currentTask
+  }
+  const urlId = raw;                    // 直接作为 URL 参数
+
+  fetch(`/task/${urlId}`)
+    .then(res=>{
+      if(!res.ok) throw new Error(`Status ${res.status}`);
+      return res.json();
+    })
+    .then(renderTask)
+    .catch(err=>{
+      console.error(err);
+      alert("无法加载任务，可能 task_id 不存在。");
+    });
+}
+
+/* ---------- 渲染任务 ---------- */
+function renderTask(data){
+  /* ----- 元数据 ----- */
+  const metaDiv = document.getElementById('metadata');
+  const scoreCls = s => s>=4? 'score-high' : s>=2? 'score-medium':'score-low';
+  metaDiv.innerHTML = `
+    <div class="meta-box">
+      <h2>Task Metadata</h2>
+      <p><strong>Original Task ID:</strong> ${data.task_id}</p>
+      <p><strong>Natural Language Task:</strong> ${data.natural_language_task || 'N/A'}</p>
+      <p><strong>Actual Task:</strong> ${data.actual_task || 'N/A'}</p>
+      <div>
+        <span class="completed completed-${data.task_completed}">
+          ${data.task_completed ? '✅ Completed' : '❌ Not Completed'}
+        </span>
+        <span class="score ${scoreCls(data.alignment_score)}">
+          Alignment: ${data.alignment_score ?? 'N/A'}/10
+        </span>
+        <span class="score ${scoreCls(data.efficiency_score)}">
+          Efficiency: ${data.efficiency_score ?? 'N/A'}/10
+        </span>
+        <span class="score">Difficulty: ${data.task_difficulty ?? 'N/A'}/10</span>
+      </div>
+      <p><strong>Reason:</strong> ${data.reason || 'N/A'}</p>
+    </div>`;
+
+  /* ----- 指令 ----- */
+  document.getElementById('instruction').innerHTML = `
+      <h2>Instruction</h2><p>${data.instruction}</p>`;
+
+  /* ----- 步骤 ----- */
+  const stepDiv = document.getElementById('steps');
+  stepDiv.innerHTML = '';                // 清空
+
+  data.traj.forEach((step, idx)=>{
+    const codeStr = step.value?.code || step.code || '[No code provided]';
+    const m = codeStr.match(/x\s*=\s*([0-9.]+).*?y\s*=\s*([0-9.]+)/i);
+    const xVal = m ? parseFloat(m[1]) : null;
+    const yVal = m ? parseFloat(m[2]) : null;
+
+    // 组织显示字段
+    const fields = ['action','code','last_step_correct','last_step_redundant','reflection','thought','observation'];
+    let valueHtml='';
+    for(const k of fields){
+      const v = step.value?.[k];
+      if(k==='last_step_correct'){
+        valueHtml += `<b>${k}</b><pre>${v===true?'correct ✅':v===false?'incorrect ❌':'[No last_step_correct]'}</pre>`;
+      }else if(k==='last_step_redundant'){
+        valueHtml += `<b>${k}</b><pre>${v===true?'redundant ❌':v===false?'not redundant ✅':'[No last_step_redundant]'}</pre>`;
+      }else{
+        valueHtml += `<b>${k}</b><pre>${v===undefined||v===null||v===''?'[No '+k+']':(typeof v==='object'?JSON.stringify(v,null,2):v)}</pre>`;
+      }
+    }
+
+    // 创建 DOM
+    const node=document.createElement('div');
+    node.className='step-box';
+    node.innerHTML=`
+      <h3>Step ${idx}</h3>
+      <div style="width:1200px;"><canvas id="canvas-${idx}" style="display:block;max-width:100%;"></canvas></div>
+      <button onclick="openFullscreen('canvas-${idx}')">🔍 Fullscreen View</button>
+      ${valueHtml}
+      <b>code</b><pre>${codeStr}</pre><hr>`;
+    stepDiv.appendChild(node);
+
+    // 绘制截图 + 点击点
+    drawOverlayCircle(document.getElementById(`canvas-${idx}`), `/images/${step.image}`, xVal, yVal);
+  });
+}
+
+/* ---------- 辅助函数 ---------- */
+function nextTask(){ currentTask=(currentTask+1)%totalTasks; document.getElementById('taskInput').value=currentTask; loadTask(); }
+function prevTask(){ currentTask=(currentTask-1+totalTasks)%totalTasks; document.getElementById('taskInput').value=currentTask; loadTask(); }
+function randomTask(){ currentTask=Math.floor(Math.random()*totalTasks); document.getElementById('taskInput').value=currentTask; loadTask(); }
+
+function openFullscreen(id){
+  const el=document.getElementById(id);
+  if(el.requestFullscreen)el.requestFullscreen();
+  else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
+  else if(el.msRequestFullscreen)el.msRequestFullscreen();
+}
+
+function drawOverlayCircle(canvas,url,x,y){
+  const ctx=canvas.getContext("2d");
+  const img=new Image();
+  img.onload=()=>{
+    canvas.style.width="100%";
+    const w=canvas.clientWidth||img.naturalWidth;
+    const h=Math.floor(w*img.naturalHeight/img.naturalWidth);
+    canvas.width=w; canvas.height=h;
+    ctx.drawImage(img,0,0,w,h);
+    if(x!==null&&y!==null&&!isNaN(x)&&!isNaN(y)){
+      ctx.beginPath(); ctx.arc(x*w,y*h,10,0,2*Math.PI);
+      ctx.strokeStyle="red"; ctx.lineWidth=3; ctx.stroke();
+    }
+  };
+  img.src=url;
+}
+
+/* ---------- 页面加载默认任务 ---------- */
+window.onload=()=>{
+  document.getElementById('taskInput').value='0';
+  loadTask();
+};
+</script>
+</body>
+</html>
