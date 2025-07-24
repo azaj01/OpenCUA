@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Trajectory Viewer</title>
+  <style>
+    /* Base styling for the application */
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      background: #f8f9fa;
+    }
+    
+    /* Header styling */
+    h1, h2 {
+      color: #333;
+    }
+    
+    /* Image display with constraints and borders */
+    img {
+      max-width: 800px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    
+    /* Code block styling with background and padding */
+    pre {
+      background: #f0f0f0;
+      padding: 1em;
+      white-space: pre-wrap;
+    }
+    
+    /* Container for each step with card-like appearance */
+    .step-box {
+      margin-top: 1em;
+      padding: 1em;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,.1);
+      border-radius: 8px;
+    }
+    
+    /* Button styling with hover effects */
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    /* Input field styling */
+    input[type=text] {
+      font-size: 18px;
+      padding: 5px;
+      margin: 5px;
+      width: 260px;
+    }
+    
+    /* Metadata container with light blue theme */
+    .meta-box {
+      background: #f0f7ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 4px solid #0066cc;
+    }
+    
+    /* Base styling for score and completion badges */
+    .score, .completed {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    
+    /* Score color coding based on performance levels */
+    .score-high {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .score-medium {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .score-low {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    /* Completion status color coding */
+    .completed-true {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .completed-false {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <h1>Trajectory Viewer</h1>
+
+  <!-- Navigation toolbar for task selection and browsing -->
+  <div>
+    <label for="taskInput">Task ID / Index:</label>
+    <input type="text" id="taskInput" placeholder="0 or 01404816-23-4984…">
+    <button onclick="prevTask()">⬅️ Previous</button>
+    <button onclick="loadTask()">🔍 Load</button>
+    <button onclick="nextTask()">➡️ Next</button>
+    <button onclick="randomTask()">🎲 Random</button>
+  </div>
+
+  <!-- Content containers for task data display -->
+  <div id="metadata"></div>    <!-- Task metadata and scores -->
+  <div id="instruction"></div> <!-- Task instruction text -->
+  <hr>
+  <div id="steps"></div>       <!-- Step-by-step trajectory data -->
+
+<script>
+/* ========== Global Variables ========== */
+
+// Total number of tasks available (injected from Flask backend)
+const totalTasks = {{ total }};
+
+// Current task index for sequential navigation (Previous/Next/Random)
+// Only used for numeric navigation, not for direct task_id lookups
+let currentTask = 0;
+
+/* ========== Main Task Loading Function ========== */
+
+/**
+ * Load and display a task based on the input field value.
+ * Supports both numeric indices (0, 1, 2...) and string task IDs.
+ * Validates numeric input ranges and updates global currentTask for navigation.
+ */
+function loadTask() {
+  // Get and validate input
+  const raw = document.getElementById('taskInput').value.trim();
+  if (!raw) { 
+    alert('Please enter a Task ID or index'); 
+    return; 
+  }
+
+  // Check if input is purely numeric (for range validation)
+  const isNumeric = /^\d+$/.test(raw);
+  if (isNumeric) {
+    const idx = Number(raw);
+    // Validate numeric range
+    if (idx < 0 || idx >= totalTasks) {
+      alert(`Numeric index should be between 0 and ${totalTasks - 1}`);
+      return;
+    }
+    // Sync currentTask for navigation consistency
+    currentTask = idx;
+  }
+
+  // Use raw input directly as URL parameter (supports both numeric and string IDs)
+  const urlId = raw;
+
+  // Fetch task data from backend API
+  fetch(`/task/${urlId}`)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
+      return response.json();
+    })
+    .then(taskData => renderTask(taskData))
+    .catch(error => {
+      console.error('Task loading error:', error);
+      alert("Unable to load task. The task_id may not exist.");
+    });
+}
+
+/* ========== Task Rendering Function ========== */
+
+/**
+ * Render complete task data including metadata, instruction, and trajectory steps.
+ * Creates dynamic HTML elements with appropriate styling and interactive features.
+ * 
+ * @param {Object} data - Complete task data from backend API
+ */
+function renderTask(data) {
+  
+  /* ----- Render Task Metadata ----- */
+  const metaDiv = document.getElementById('metadata');
+  
+  // Helper function to determine score color class based on value
+  const getScoreClass = score => {
+    if (score >= 4) return 'score-high';
+    if (score >= 2) return 'score-medium';
+    return 'score-low';
+  };
+  
+  // Build metadata HTML with task information and scores
+  metaDiv.innerHTML = `
+    <div class="meta-box">
+      <h2>Task Metadata</h2>
+      <p><strong>Original Task ID:</strong> ${data.task_id}</p>
+      <p><strong>Natural Language Task:</strong> ${data.natural_language_task || 'N/A'}</p>
+      <p><strong>Actual Task:</strong> ${data.actual_task || 'N/A'}</p>
+      <div>
+        <span class="completed completed-${data.task_completed}">
+          ${data.task_completed ? '✅ Completed' : '❌ Not Completed'}
+        </span>
+        <span class="score ${getScoreClass(data.alignment_score)}">
+          Alignment: ${data.alignment_score ?? 'N/A'}/10
+        </span>
+        <span class="score ${getScoreClass(data.efficiency_score)}">
+          Efficiency: ${data.efficiency_score ?? 'N/A'}/10
+        </span>
+        <span class="score">Difficulty: ${data.task_difficulty ?? 'N/A'}/10</span>
+      </div>
+      <p><strong>Reason:</strong> ${data.reason || 'N/A'}</p>
+    </div>`;
+
+  /* ----- Render Task Instruction ----- */
+  document.getElementById('instruction').innerHTML = `
+    <h2>Instruction</h2>
+    <p>${data.instruction}</p>`;
+
+  /* ----- Render Trajectory Steps ----- */
+  const stepDiv = document.getElementById('steps');
+  stepDiv.innerHTML = ''; // Clear previous content
+
+  // Process each step in the trajectory
+  data.traj.forEach((step, stepIndex) => {
+    
+    // Extract code and parse click coordinates if available
+    const codeString = step.value?.code || step.code || '[No code provided]';
+    
+    // Regular expression to extract x and y coordinates from code
+    const coordinateMatch = codeString.match(/x\s*=\s*([0-9.]+).*?y\s*=\s*([0-9.]+)/i);
+    const xValue = coordinateMatch ? parseFloat(coordinateMatch[1]) : null;
+    const yValue = coordinateMatch ? parseFloat(coordinateMatch[2]) : null;
+
+    // Define fields to display for each step (in order)
+    const displayFields = [
+      'action', 'code', 'last_step_correct', 'last_step_redundant', 
+      'reflection', 'thought', 'observation'
+    ];
+    
+    // Build HTML for step fields
+    let fieldsHtml = '';
+    for (const fieldName of displayFields) {
+      const fieldValue = step.value?.[fieldName];
+      
+      // Special formatting for boolean correctness fields
+      if (fieldName === 'last_step_correct') {
+        const displayText = fieldValue === true ? 'correct ✅' : 
+                           fieldValue === false ? 'incorrect ❌' : 
+                           '[No last_step_correct]';
+        fieldsHtml += `<b>${fieldName}</b><pre>${displayText}</pre>`;
+      } 
+      else if (fieldName === 'last_step_redundant') {
+        const displayText = fieldValue === true ? 'redundant ❌' : 
+                           fieldValue === false ? 'not redundant ✅' : 
+                           '[No last_step_redundant]';
+        fieldsHtml += `<b>${fieldName}</b><pre>${displayText}</pre>`;
+      } 
+      else {
+        // Handle undefined/null values and object serialization
+        let displayValue;
+        if (fieldValue === undefined || fieldValue === null || fieldValue === '') {
+          displayValue = `[No ${fieldName}]`;
+        } else if (typeof fieldValue === 'object') {
+          displayValue = JSON.stringify(fieldValue, null, 2);
+        } else {
+          displayValue = fieldValue;
+        }
+        fieldsHtml += `<b>${fieldName}</b><pre>${displayValue}</pre>`;
+      }
+    }
+
+    // Create DOM element for this step
+    const stepElement = document.createElement('div');
+    stepElement.className = 'step-box';
+    stepElement.innerHTML = `
+      <h3>Step ${stepIndex}</h3>
+      <div style="width:1200px;">
+        <canvas id="canvas-${stepIndex}" style="display:block;max-width:100%;"></canvas>
+      </div>
+      <button onclick="openFullscreen('canvas-${stepIndex}')">🔍 Fullscreen View</button>
+      ${fieldsHtml}
+      <b>code</b><pre>${codeString}</pre>
+      <hr>`;
+    
+    stepDiv.appendChild(stepElement);
+
+    // Draw screenshot with click point overlay on canvas
+    const canvas = document.getElementById(`canvas-${stepIndex}`);
+    drawOverlayCircle(canvas, `/images/${step.image}`, xValue, yValue);
+  });
+}
+
+/* ========== Navigation Helper Functions ========== */
+
+/**
+ * Navigate to the next task in sequence.
+ * Wraps around to task 0 when reaching the end.
+ */
+function nextTask() { 
+  currentTask = (currentTask + 1) % totalTasks; 
+  document.getElementById('taskInput').value = currentTask; 
+  loadTask(); 
+}
+
+/**
+ * Navigate to the previous task in sequence.
+ * Wraps around to the last task when at the beginning.
+ */
+function prevTask() { 
+  currentTask = (currentTask - 1 + totalTasks) % totalTasks; 
+  document.getElementById('taskInput').value = currentTask; 
+  loadTask(); 
+}
+
+/**
+ * Navigate to a random task.
+ * Updates both the input field and loads the task.
+ */
+function randomTask() { 
+  currentTask = Math.floor(Math.random() * totalTasks); 
+  document.getElementById('taskInput').value = currentTask; 
+  loadTask(); 
+}
+
+/* ========== Utility Functions ========== */
+
+/**
+ * Request fullscreen mode for a canvas element.
+ * Handles browser compatibility for fullscreen API.
+ * 
+ * @param {string} canvasId - ID of the canvas element to display fullscreen
+ */
+function openFullscreen(canvasId) {
+  const element = document.getElementById(canvasId);
+  
+  // Try different fullscreen methods for browser compatibility
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.webkitRequestFullscreen) { // Safari
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) { // IE/Edge
+    element.msRequestFullscreen();
+  }
+}
+
+/**
+ * Draw an image on canvas with optional click point overlay.
+ * Handles image loading, canvas sizing, and coordinate scaling.
+ * 
+ * @param {HTMLCanvasElement} canvas - Target canvas element
+ * @param {string} imageUrl - URL of the image to load
+ * @param {number|null} x - X coordinate for click point (0-1 range)
+ * @param {number|null} y - Y coordinate for click point (0-1 range)
+ */
+function drawOverlayCircle(canvas, imageUrl, x, y) {
+  const context = canvas.getContext("2d");
+  const image = new Image();
+  
+  image.onload = function() {
+    // Set canvas responsive width and calculate proportional height
+    canvas.style.width = "100%";
+    const canvasWidth = canvas.clientWidth || image.naturalWidth;
+    const canvasHeight = Math.floor(canvasWidth * image.naturalHeight / image.naturalWidth);
+    
+    // Set actual canvas dimensions for drawing
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    
+    // Draw the image scaled to canvas size
+    context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    
+    // Draw click point overlay if coordinates are valid
+    if (x !== null && y !== null && !isNaN(x) && !isNaN(y)) {
+      context.beginPath();
+      // Convert normalized coordinates (0-1) to canvas pixels
+      context.arc(x * canvasWidth, y * canvasHeight, 10, 0, 2 * Math.PI);
+      context.strokeStyle = "red";
+      context.lineWidth = 3;
+      context.stroke();
+    }
+  };
+  
+  // Start loading the image
+  image.src = imageUrl;
+}
+
+/* ========== Page Initialization ========== */
+
+/**
+ * Initialize the page when DOM is fully loaded.
+ * Sets default task to index 0 and loads it automatically.
+ */
+window.onload = function() {
+  // Set default task input and load first task
+  document.getElementById('taskInput').value = '0';
+  loadTask();
+};
+</script>
+</body>
+</html>

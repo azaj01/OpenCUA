@@ -117,7 +117,7 @@ def generate_cot(
             ]
         response = call_llm(client, messages, model=model)
 
-        print("First Response")
+        logger.info(f"Generator response: {response}")
 
         if need_double_check:
             messages=[
@@ -135,8 +135,7 @@ def generate_cot(
                     }
                 ]
             response = call_llm(client, messages, model=model)
-            print("Double Check Response:")
-            print(response)
+            logger.info(f"Double Check Response: {response}")
 
         current_step = current_step_value.copy()
         current_step.update(parse_generator_response(response))
@@ -146,6 +145,7 @@ def generate_cot(
             if with_prior_judge:
                 reflect_response = gen_reflection_thought_with_prior_judge(
                     client, 
+                    model=model,
                     goal=goal,
                     history_steps=history_steps,
                     current_step=current_step,
@@ -156,6 +156,7 @@ def generate_cot(
             else:
                 reflect_response = gen_reflection_thought(
                     client, 
+                    model=model,
                     goal=goal,
                     history_steps=history_steps,
                     current_step=current_step,
@@ -215,12 +216,11 @@ def generate_traj_eval(generated_steps, goal, client, model):
             }
         ]
         response_str = call_llm(client, messages, model=model)
-        print("Trajectory Evaluation:")
-        print(response_str)
+        logger.info(f"Trajectory Evaluation: {response_str}")
         if "```json" in response_str:
             response_str = response_str.split("```json")[1].split("```")[0].strip()
         parsed_data = orjson.loads(response_str)
-        print("Parsed Eval Result:", parsed_data) 
+        logger.info(f"Parsed Eval Result: {parsed_data}") 
         return parsed_data
 
     except (APITimeoutError, APIConnectionError, RateLimitError) as e:
@@ -328,7 +328,23 @@ def process_traj(task, task_id, output_dir, image_folder, model:str, need_double
     logger.info(f"Done: Processed task {task_id}")
 
 
-def gen_inner_monologue_mt(image_folder, traj_path, output_dir, model="claude-3-7-sonnet-20250219", num_threads = 10, max_num = None, need_double_check=False, with_prior_judge=False):
+# 在 gen_cot.py 文件末尾的 gen_inner_monologue_mt 函数中添加合并调用
+
+def gen_inner_monologue_mt(image_folder, traj_path, output_dir, model="claude-3-7-sonnet-20250219", num_threads = 10, max_num = None, need_double_check=False, with_prior_judge=False, auto_merge=True):
+    """
+    Generate inner monologue with multi-threading support.
+    
+    Args:
+        image_folder (str): Path to image folder
+        traj_path (str): Path to trajectory JSONL file
+        output_dir (str): Output directory for generated files
+        model (str): Model name for LLM calls
+        num_threads (int): Number of threads to use
+        max_num (int, optional): Maximum number of tasks to process
+        need_double_check (bool): Whether to perform double check
+        with_prior_judge (bool): Whether there is a judge result in the step
+        auto_merge (bool): Whether to automatically merge results to JSONL after completion
+    """
     tasks = []
     with open(traj_path, 'r') as file:
         for line in file:
@@ -338,12 +354,9 @@ def gen_inner_monologue_mt(image_folder, traj_path, output_dir, model="claude-3-
     required_tasks = []
     done_tasks_count = 0
     continue_task_count = 0
+
     for task in tqdm(tasks):
-        if "task_id" not in task:
-            task['task_id'] = task['traj'][0]['image'].rsplit(".",1)[0].split("/")[-1].rsplit("_", 1)[0]
-            task_id = task['task_id']
-        else:
-            task_id = task['task_id']
+        task_id = task['task_id']
 
         if task_id not in existing_files:
             required_tasks.append(task)
@@ -372,14 +385,35 @@ def gen_inner_monologue_mt(image_folder, traj_path, output_dir, model="claude-3-
 
         for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             _ = future.result()
+    
+    # Auto-merge results to JSONL file after processing is complete
+    if auto_merge:
+        logger.info("🔄 Starting automatic merge of results...")
+        try:
+            from merge_json import merge_json_to_jsonl  # Import the merge function
+            
+            # Generate output filename based on input trajectory file
+            traj_filename = os.path.splitext(os.path.basename(traj_path))[0]
+            output_jsonl = f"{traj_filename}_with_cot.jsonl"
+            
+            merged_file = merge_json_to_jsonl(
+                input_dir=output_dir,
+                output_file=output_jsonl,
+                use_multiprocessing=True
+            )
+            logger.info(f"🎉 Successfully merged results to: {merged_file}")
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to merge results: {str(e)}")
+            logger.info("You can manually merge results later using merge_json.py")
 
 
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Generate Inner Monologue")
-    parser.add_argument("--image_folder", type=str, default="./OpenCUA-Code/CoTGenerator/example/images", help="Path to the image folder")
-    parser.add_argument("--traj_path", type=str, default='./OpenCUA-Code/CoTGenerator/example/traj_example.jsonl', help="Path to the trajectory file")
-    parser.add_argument("--output_dir", type=str, default="./OpenCUA-Code/CoTGenerator/example/output", help="Output directory for generated files")
+    parser.add_argument("--image_folder", type=str, default="./gen_cot_example/images", help="Path to the image folder")
+    parser.add_argument("--traj_path", type=str, default='./gen_cot_example/raw_example.jsonl', help="Path to the trajectory file")
+    parser.add_argument("--output_dir", type=str, default="./gen_cot_example/output/tasks", help="Output directory for generated files")
     
     parser.add_argument("--need_double_check", action='store_true', help="Whether to perform double check on the generated code")
     parser.add_argument("--with_prior_judge", action='store_true', help="Whether there is a judge result in the step. True for Ubuntu; False for AGN")
@@ -387,11 +421,17 @@ def main():
     parser.add_argument("--model", type=str, default="claude-3-7-sonnet-20250219", help="Model to use for LLM calls")
     parser.add_argument("--num_threads", type=int, default=1, help="Number of threads to use")
     parser.add_argument("--max_num", type=int, default=None, help="Maximum number of tasks to process")
+    parser.add_argument("--no_auto_merge", action='store_true', help="Disable automatic merging of results")
+    
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
-    args = dict(args._get_kwargs())
-    gen_inner_monologue_mt(**args)
+
+    # Convert args to dict and call the function
+    kwargs = dict(args._get_kwargs())
+    kwargs['auto_merge'] = not kwargs.pop('no_auto_merge')  # Invert the flag
+    
+    gen_inner_monologue_mt(**kwargs)
 
 
 if __name__ == "__main__":

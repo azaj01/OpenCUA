@@ -162,7 +162,6 @@ def build_reflection_messages(
         prompt_template = TRANSIT_REFLECTION_FORMAT_PROMPT_TERMINATE_STEP
     
     if image_patch:
-        print("use image patch", current_step["code"])
         content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_to_base64(image_patch)}", "detail": "high"}})
         prompt_template = TRANSIT_REFLECTION_WITH_IMAGE_PATCH_FORMAT_PROMPT
 
@@ -200,6 +199,7 @@ def build_reflection_messages(
 )
 def gen_reflection_thought(
         client, 
+        model: str,
         goal: str, 
         history_steps: str, 
         current_step: dict, 
@@ -223,7 +223,7 @@ def gen_reflection_thought(
         next_image=next_image
     )
 
-    response_str = call_llm(client, reflection_messages, temperature=0)
+    response_str = call_llm(client, messages=reflection_messages, model=model, temperature=0)
     print("\nReflection Thought:")
     print(response_str)
 

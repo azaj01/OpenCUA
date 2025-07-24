@@ -154,7 +154,6 @@ def crop_image_patch(image: Image.Image, x: float, y: float, patch_size: int = 3
     # Get pixel coordinates
     width, height = image.size
 
-    # 将归一化坐标转换为绝对坐标
     center_x = int(x * width)
     center_y = int(y * height)
 
@@ -284,14 +283,7 @@ def smart_resize(
 
 def convert_code_relative_to_absolute(code: str, image: Image.Image) -> tuple[str, tuple[int, int], list[tuple[float, float]]]:
     """
-    将 code 中的 0-1 相对坐标转换为 resize 后图像上的绝对坐标并替换回原代码。
-
-    支持 pyautogui.click(x=..., y=...) 和 click(0.1, 0.2) 等形式。
-
-    Returns:
-        - 新代码
-        - resize 后图像尺寸 (w, h)
-        - 原始相对坐标列表
+        Convert relative coordinates to absolute coordinates.
     """
     original_w, original_h = image.size
     resized_h, resized_w = smart_resize(original_h, original_w)
@@ -313,12 +305,10 @@ def convert_code_relative_to_absolute(code: str, image: Image.Image) -> tuple[st
             x_abs = int(x_rel * resized_w)
             y_abs = int(y_rel * resized_h)
 
-            # 先判断是 x=.../y=... 形式还是纯数字
             if "x=" in line and "y=" in line:
                 line = re.sub(r"x\s*=\s*([-+]?\d*\.\d+|[-+]?\d+)", f"x={x_abs}", line)
                 line = re.sub(r"y\s*=\s*([-+]?\d*\.\d+|[-+]?\d+)", f"y={y_abs}", line)
             else:
-                # 直接替换前两个数字（位置参数）
                 line = re.sub(
                     r"([-+]?\d*\.\d+|[-+]?\d+)", 
                     lambda m, c=[x_abs, y_abs]: str(c.pop(0)) if c else m.group(0), 
@@ -337,16 +327,7 @@ def convert_code_absolute_to_relative(
     coord_type: str = "qwen25"  # or "absolute"
 ) -> tuple[str, tuple[int, int], list[tuple[float, float]]]:
     """
-    把 *绝对* 坐标改回 0-1 相对坐标（基于 smart_resize 之后的尺寸）。
-    
-    Returns
-    -------
-    new_code : str
-        代码中被替换后的字符串（坐标已变成 0-1 小数，保留 4 位）。
-    wh       : (w, h)
-        smart_resize 之后的图像尺寸。
-    all_xy   : list[(x_rel, y_rel)]
-        转换得到的相对坐标（便于调试）。
+        Convert different types of coordinate to relative coordinates.
     """
     orig_w, orig_h = image.size
     if coord_type == "qwen25":
@@ -368,15 +349,15 @@ def convert_code_absolute_to_relative(
             continue
 
         coords = parse_coordinates_from_line(l_strip)
-        if coords and len(coords) == 2:  # 拿到绝对坐标
+        if coords and len(coords) == 2: 
             x_abs, y_abs = coords
             x_rel, y_rel = x_abs / resized_w, y_abs / resized_h
             all_coords.append((x_rel, y_rel))
 
-            if "x=" in l_strip and "y=" in l_strip:           # 关键字参数
+            if "x=" in l_strip and "y=" in l_strip:       
                 line = re.sub(r"x\s*=\s*[-+]?\d+(\.\d+)?", f"x={to_rel(x_abs, resized_w)}", line)
                 line = re.sub(r"y\s*=\s*[-+]?\d+(\.\d+)?", f"y={to_rel(y_abs, resized_h)}", line)
-            else:                                             # 位置参数
+            else:                                         
                 repl_vals = [to_rel(x_abs, resized_w), to_rel(y_abs, resized_h)]
                 line = re.sub(
                     r"[-+]?\d+(\.\d+)?",

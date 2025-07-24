@@ -99,6 +99,7 @@ def build_reflection_messages(task: str, history_steps: str, current_step: dict,
 )
 def gen_reflection_thought_with_prior_judge(
         client, 
+        model: str,
         goal: str, 
         history_steps: str, 
         current_step: dict, 
@@ -122,7 +123,7 @@ def gen_reflection_thought_with_prior_judge(
         next_image=next_image
     )
 
-    response_str = call_llm(client, reflection_messages, temperature=0)
+    response_str = call_llm(client, messages=reflection_messages, model=model, temperature=0)
     print("\nReflection Thought:")
     print(response_str)
 
