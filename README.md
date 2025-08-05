@@ -6,7 +6,7 @@
   line-height:1.25;
   text-align:center;
   margin:0 0 24px;">
-  OpenCUA: Open Foundations for <br> Computer-Use Agents
+  OpenCUA: Open Foundations for Computer-Use Agents
 </h1>
 
 <p align="center">
