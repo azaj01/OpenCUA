@@ -9,49 +9,13 @@
   OpenCUA: Open Foundations for <br> Computer-Use Agents
 </h1>
 
-<div style="
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:28px;">
-  
-  <a href="https://opencua.xlang.ai/" style="
-     display:inline-block;
-     padding:8px 24px;
-     background:#2b2b2b;
-     color:#ffffff;
-     border-radius:36px;
-     text-decoration:none;
-     font-weight:600;
-     font-size:16px;">
-    🌐 Website
-  </a>
+<p align="center">
+  <a href="https://opencua.xlang.ai/">Website</a> •
+  <a href="https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf">Paper</a> •
+  <a href="https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d">Model</a> 
+</p>
 
-  <a href="https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf" style="
-     display:inline-block;
-     padding:8px 24px;
-     background:#2b2b2b;
-     color:#ffffff;
-     border-radius:36px;
-     text-decoration:none;
-     font-weight:600;
-     font-size:16px;">
-    📝 Paper
-  </a>
 
-  <a href="https://github.com/xlang-ai/OpenCUA" style="
-     display:inline-block;
-     padding:8px 24px;
-     background:#2b2b2b;
-     color:#ffffff;
-     border-radius:36px;
-     text-decoration:none;
-     font-weight:600;
-     font-size:16px;">
-    💻 Code
-  </a>
-</div>
 
 <div style="max-width:900px;margin:0 auto;">
 
@@ -90,7 +54,7 @@ Raw demonstrations can contain thousands of low-level events that are too dense 
 The **DataProcessor** module (`./DataProcessor/`) performs two key steps:
 
 1. **Action Reduction** — merges granular signals into concise, semantically meaningful PyAutoGUI actions (e.g., collapsing mouse moves → click, coalescing scrolls, grouping key-press sequences into text or hotkeys).  
-2. **State–Action Matching** — aligns every reduced action with the *last visually distinct frame* **before** the action begins, avoiding future-information leakage and yielding compact state–action pairs `⟨sᵢ, aᵢ⟩`.
+2. **State–Action Matching** — aligns every reduced action with the *last visually distinct frame* **before** the action begins, avoiding future-information leakage and yielding compact state–action pairs.
 
 These processed trajectories underlie all downstream training and evaluation.
 
