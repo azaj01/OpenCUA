@@ -1,11 +1,11 @@
 {
-  "task_id": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410",
+  "task_id": "s_7f27a11115e596eb",
   "user_task_description": "Look for the last song of the latest Vampire Weekend album in Spotify and play this song",
   "high_level_task_description": "Open Spotify in a web browser, search for 'Vampire Weekend', navigate to their artist page, locate the latest album 'Only God Was Above Us', and play the last track 'Hope'.",
   "steps": [
     {
       "step_num": 0,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_0.png",
+      "image": "s_7f27a11115e596eb_0.png",
       "action": "pyautogui.click(x=0.3395, y=0.6307)",
       "milestone": false,
       "inner_monologue": {
@@ -80,7 +80,7 @@
     },
     {
       "step_num": 1,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_1.png",
+      "image": "s_7f27a11115e596eb_1.png",
       "action": "pyautogui.write(message='SPOTIFY')\npyautogui.press(keys=['enter'])",
       "milestone": false,
       "inner_monologue": {
@@ -101,7 +101,7 @@
     },
     {
       "step_num": 3,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_3.png",
+      "image": "s_7f27a11115e596eb_3.png",
       "action": "pyautogui.click(x=0.1633, y=0.6426)",
       "milestone": false,
       "inner_monologue": {
@@ -144,7 +144,7 @@
     },
     {
       "step_num": 4,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_4.png",
+      "image": "s_7f27a11115e596eb_4.png",
       "action": "pyautogui.click(x=0.2141, y=0.2442)",
       "milestone": false,
       "inner_monologue": {
@@ -187,7 +187,7 @@
     },
     {
       "step_num": 5,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_5.png",
+      "image": "s_7f27a11115e596eb_5.png",
       "action": "pyautogui.write(message='VAMPIRE WEEKEND')\npyautogui.press(keys=['enter'])",
       "milestone": false,
       "inner_monologue": {
@@ -208,7 +208,7 @@
     },
     {
       "step_num": 6,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_6.png",
+      "image": "s_7f27a11115e596eb_6.png",
       "action": "pyautogui.click(x=0.4336, y=0.5821)",
       "milestone": false,
       "inner_monologue": {
@@ -251,7 +251,7 @@
     },
     {
       "step_num": 7,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_7.png",
+      "image": "s_7f27a11115e596eb_7.png",
       "action": "pyautogui.moveTo(x=0.4496, y=0.7349)\npyautogui.scroll(-54)",
       "milestone": false,
       "inner_monologue": {
@@ -339,7 +339,7 @@
     },
     {
       "step_num": 8,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_8.png",
+      "image": "s_7f27a11115e596eb_8.png",
       "action": "pyautogui.click(x=0.4658, y=0.8013)",
       "milestone": false,
       "inner_monologue": {
@@ -382,7 +382,7 @@
     },
     {
       "step_num": 10,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_10.png",
+      "image": "s_7f27a11115e596eb_10.png",
       "action": "pyautogui.click(x=0.32, y=0.8098)",
       "milestone": false,
       "inner_monologue": {
@@ -425,12 +425,12 @@
     },
     {
       "step_num": 12,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_12.png",
+      "image": "s_7f27a11115e596eb_12.png",
       "action": "pyautogui.click(x=0.3318, y=0.6736)",
       "milestone": false,
       "inner_monologue": {
         "observation": "The application in use is Spotify, open inside a web browser. The active window is displaying an album page titled 'Only God Was Above Us' by Vampire Weekend. The interface includes a sidebar for navigation with options like 'Create your first playlist' and 'Browse podcasts'. The main content area shows a list of tracks from the album, with their numbers, titles, and durations. The last track in the list is 'Hope', marked as track number 10. There's a play icon next to the album name above the tracklist. Key information near the target element includes the track number and title `10 Hope`.",
-        "thought": "The task is to play the last song from Vampire Weekend\u2019s latest album. So far, the task has been approached correctly by navigating to the artist page, accessing their discography, and selecting the newest album. The visible tracklist confirms that we're viewing the correct album. The last track, 'Hope', needs to be clicked to attempt playback. The logical next action is to click on this track to initiate playback. The expected outcome after clicking is that the song will start playing, completing the task.",
+        "thought": "The task is to play the last song from Vampire Weekend’s latest album. So far, the task has been approached correctly by navigating to the artist page, accessing their discography, and selecting the newest album. The visible tracklist confirms that we're viewing the correct album. The last track, 'Hope', needs to be clicked to attempt playback. The logical next action is to click on this track to initiate playback. The expected outcome after clicking is that the song will start playing, completing the task.",
         "low_level_instruction": "Click on track number 10 titled 'Hope' from the album 'Only God Was Above Us' on the Spotify page."
       },
       "ground_truth_actions": [
@@ -468,7 +468,7 @@
     },
     {
       "step_num": 13,
-      "image": "20240917210951_gxlvera@gmail.com_118ad264-0aa9-49dd-be57-d1c52df71410_13.png",
+      "image": "s_7f27a11115e596eb_13.png",
       "action": "computer.terminate(status='success')",
       "milestone": false,
       "inner_monologue": {

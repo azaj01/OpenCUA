@@ -1,11 +1,11 @@
 {
-  "task_id": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2",
+  "task_id": "s_df0fd37049f470c2",
   "user_task_description": "Look up George Orwell's works on Goodreads and check the status of 'Homage to Catalonia'.",
   "high_level_task_description": "Search for George Orwell on Goodreads, navigate to his author page, locate 'Homage to Catalonia', and check its status.",
   "steps": [
     {
       "step_num": 2,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_2.png",
+      "image": "s_df0fd37049f470c2_2.png",
       "action": "pyautogui.click(x=0.3271, y=0.2694)",
       "milestone": false,
       "inner_monologue": {
@@ -47,7 +47,7 @@
     },
     {
       "step_num": 3,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_3.png",
+      "image": "s_df0fd37049f470c2_3.png",
       "action": "pyautogui.write(message='george orwell')",
       "milestone": false,
       "inner_monologue": {
@@ -67,7 +67,7 @@
     },
     {
       "step_num": 4,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_4.png",
+      "image": "s_df0fd37049f470c2_4.png",
       "action": "pyautogui.click(x=0.5276, y=0.2694)",
       "milestone": true,
       "inner_monologue": {
@@ -109,7 +109,7 @@
     },
     {
       "step_num": 6,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_6.png",
+      "image": "s_df0fd37049f470c2_6.png",
       "action": "pyautogui.moveTo(x=0.7792, y=0.4648)\npyautogui.scroll(-3)",
       "milestone": false,
       "inner_monologue": {
@@ -164,7 +164,7 @@
     },
     {
       "step_num": 7,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_7.png",
+      "image": "s_df0fd37049f470c2_7.png",
       "action": "pyautogui.click(x=0.7349, y=0.7509)",
       "milestone": false,
       "inner_monologue": {
@@ -206,7 +206,7 @@
     },
     {
       "step_num": 9,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_9.png",
+      "image": "s_df0fd37049f470c2_9.png",
       "action": "pyautogui.click(x=0.7276, y=0.1907)",
       "milestone": false,
       "inner_monologue": {
@@ -248,7 +248,7 @@
     },
     {
       "step_num": 10,
-      "image": "20240923220241_st2rb8g@gmail.com_81d55a4d-385a-4236-8ffa-1d0ed5d34da2_10.png",
+      "image": "s_df0fd37049f470c2_10.png",
       "action": "computer.terminate(status='success')",
       "milestone": false,
       "inner_monologue": {

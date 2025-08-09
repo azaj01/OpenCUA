@@ -1,11 +1,11 @@
 {
-  "task_id": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28",
+  "task_id": "s_a96285eb665bef92",
   "user_task_description": "Upload a local pdf file named \"CardPhotoForm.pdf\" to Microsoft Sway to automatically generate a Storyline and export the presentation to a pdf file with the same name",
   "high_level_task_description": "Open Microsoft Sway from Microsoft 365, upload the 'CardPhotoForm.pdf' file to generate a Storyline, and export the presentation as a PDF file named 'CardPhotoForm'.",
   "steps": [
     {
       "step_num": 2,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_2.png",
+      "image": "s_a96285eb665bef92_2.png",
       "action": "pyautogui.click(x=0.8221, y=0.9111)",
       "milestone": true,
       "inner_monologue": {
@@ -48,7 +48,7 @@
     },
     {
       "step_num": 3,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_3.png",
+      "image": "s_a96285eb665bef92_3.png",
       "action": "pyautogui.click(x=0.8556, y=0.4691)",
       "milestone": false,
       "inner_monologue": {
@@ -123,7 +123,7 @@
     },
     {
       "step_num": 4,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_4.png",
+      "image": "s_a96285eb665bef92_4.png",
       "action": "pyautogui.click(x=0.3005, y=0.4909)",
       "milestone": false,
       "inner_monologue": {
@@ -166,7 +166,7 @@
     },
     {
       "step_num": 5,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_5.png",
+      "image": "s_a96285eb665bef92_5.png",
       "action": "pyautogui.click(x=0.8213, y=0.7162)",
       "milestone": true,
       "inner_monologue": {
@@ -209,7 +209,7 @@
     },
     {
       "step_num": 6,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_6.png",
+      "image": "s_a96285eb665bef92_6.png",
       "action": "pyautogui.click(x=0.979, y=0.1631)",
       "milestone": false,
       "inner_monologue": {
@@ -252,7 +252,7 @@
     },
     {
       "step_num": 7,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_7.png",
+      "image": "s_a96285eb665bef92_7.png",
       "action": "pyautogui.click(x=0.8777, y=0.4157)",
       "milestone": false,
       "inner_monologue": {
@@ -327,7 +327,7 @@
     },
     {
       "step_num": 8,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_8.png",
+      "image": "s_a96285eb665bef92_8.png",
       "action": "pyautogui.click(x=0.8079, y=0.7707)",
       "milestone": true,
       "inner_monologue": {
@@ -370,7 +370,7 @@
     },
     {
       "step_num": 9,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_9.png",
+      "image": "s_a96285eb665bef92_9.png",
       "action": "pyautogui.write(message='CardPhotoForm')",
       "milestone": false,
       "inner_monologue": {
@@ -391,7 +391,7 @@
     },
     {
       "step_num": 10,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_10.png",
+      "image": "s_a96285eb665bef92_10.png",
       "action": "pyautogui.click(x=0.6033, y=0.5212)",
       "milestone": true,
       "inner_monologue": {
@@ -434,11 +434,11 @@
     },
     {
       "step_num": 11,
-      "image": "20241001061110_bryanwang.nlp@gmail.com_6153058e-6a74-46eb-a858-4c07191e5d28_11.png",
+      "image": "s_a96285eb665bef92_11.png",
       "action": "computer.terminate(status='success')",
       "milestone": false,
       "inner_monologue": {
-        "observation": "The current state shows a web application, Microsoft Sway, being used in Google Chrome. The page displays a print dialog box on the right side with the document \"THE UNIVERSITY OF HONG KONG\" prepared for student registration card submission. Key elements visible include the print options specifying 'Destination', 'Pages', and the 'Save' button, which has been clicked and is now in a 'Saving\u2026' state. The browser tab and address bar are visible, confirming the application context. Options like 'Play', 'Share', and 'Dismiss' are also present on the page.",
+        "observation": "The current state shows a web application, Microsoft Sway, being used in Google Chrome. The page displays a print dialog box on the right side with the document \"THE UNIVERSITY OF HONG KONG\" prepared for student registration card submission. Key elements visible include the print options specifying 'Destination', 'Pages', and the 'Save' button, which has been clicked and is now in a 'Saving…' state. The browser tab and address bar are visible, confirming the application context. Options like 'Play', 'Share', and 'Dismiss' are also present on the page.",
         "thought": "The task so far has involved successfully saving a PDF version of the document 'CardPhotoForm'. The print dialog shows the process progressing as expected, confirming that the PDF file was saved with the correct name. Based on the visible state, the process of uploading and exporting has been completed as per the goal. Since the 'Save' operation is in progress, the following logical step would be to conclude or terminate the current sequence of actions, marking the task as completed. No errors or obstacles are apparent in the current application state.",
         "low_level_instruction": "Confirm the completion of the current workflow by terminating the operation and marking it successful."
       },
