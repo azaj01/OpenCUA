@@ -94,11 +94,13 @@ Thought: """
         
         return messages
 
-    def parse_response(self, response: str) -> str:
+    def parse_response(self, response: str, trajectory: Optional[Dict[str, Any]] = None, step_idx: Optional[int] = None) -> str:
         """Parse the raw response from the agent into executable form.
         
         Args:
             response: Raw response string from the model
+            trajectory: Optional trajectory data (unused)
+            step_idx: Optional step index (unused)
             
         Returns:
             Parsed response string ready for evaluation
@@ -174,11 +176,12 @@ Thought: """
             # Extract keys for press/hotkey actions
             keys_match = re.findall(r"keys=\[(.*?)\]", action)
             if keys_match:
-                keys = [k.strip("'\"") for k in keys_match[0].split(",")]
-                if len(keys) == 1:
-                    actions.append(("press", keys[0]))  # Single key
+                keys = [k.strip("'\" ") for k in keys_match[0].split(",") if k.strip()]
+                # Always return lists for consistency with evaluator
+                if len(keys) <= 1:
+                    actions.append(("press", keys if keys else []))
                 else:
-                    actions.append(("hotkey", keys))  # Multiple keys
+                    actions.append(("hotkey", keys))
                 
         return actions
 

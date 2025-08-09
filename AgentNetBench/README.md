@@ -56,11 +56,11 @@ Notes:
 
 ### Run evaluation
 ```bash
-python /home2/djlu/OpenCUA/AgentNetBench/run.py \
-  --data /home2/djlu/OpenCUA/AgentNetBench/single_data \
-  --image_dir /home2/djlu/OpenCUA/AgentNetBench/single_data/images \
-  --output /home2/djlu/OpenCUA/AgentNetBench/output \
-  --model qwen2.5-vl-7b-cpt \
+python run.py \
+  --data single_data \
+  --image_dir single_data/images \
+  --output output \
+  --model qwen2.5-vl-7b \
   --base_url http://YOUR_OPENAI_COMPATIBLE_SERVER/v1 \
   --api_key YOUR_API_KEY \
   --num_cores 10
@@ -87,8 +87,8 @@ Per-step result fields include:
 ### Re-evaluate existing results (without calling the model)
 You can re-parse and re-score previously saved outputs (useful after evaluator updates):
 ```bash
-python /home2/djlu/OpenCUA/AgentNetBench/reeval.py \
-  --input_dir /home2/djlu/OpenCUA/AgentNetBench/output/<eval_dir>
+python reeval.py \
+  --input_dir output/<eval_dir>
 ```
 
 ### Troubleshooting

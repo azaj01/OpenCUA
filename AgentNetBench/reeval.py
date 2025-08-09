@@ -123,7 +123,7 @@ def reeval_directory(input_dir: Path, output_dir: Path = None):
                             def __init__(self, model, client=None, **kwargs):
                                 self.model = model
                                 self.client = None
-                                self.image_dir = "/home2/djlu/VideoAgentTrek/offline_benchmark/test_data/images"
+                                self.image_dir = "test_data/images"
                                 self.image_cache = {}
                                 self.message_cache = {}
                                 self.history_n = 3
@@ -157,7 +157,7 @@ def reeval_directory(input_dir: Path, output_dir: Path = None):
         # Load trajectory results
         results = load_trajectory_results(file_path)
         # print(file_path)
-        trajectory_path = Path("/home2/djlu/VideoAgentTrek/offline_benchmark/test_data") / file_path.name
+        trajectory_path = Path("test_data") / file_path.name
         with open(trajectory_path, "r") as f:
             trajectory = json.load(f)
         
