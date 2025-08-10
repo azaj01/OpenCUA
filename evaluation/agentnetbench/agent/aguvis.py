@@ -144,8 +144,8 @@ Thought: """
             
         # Handle pyautogui actions
         if action.startswith("pyautogui."):
-            # Extract coordinates for click/moveTo actions
-            coord_match = re.search(r"x=([\d.]+),\s*y=([\d.]+)", action)
+            # Extract coordinates for click/moveTo actions (tolerate spaces around '=')
+            coord_match = re.search(r"x\s*=\s*([\d.]+)\s*,\s*y\s*=\s*([\d.]+)", action)
             if coord_match:
                 x, y = map(float, coord_match.groups())
                 if "click" in action:
