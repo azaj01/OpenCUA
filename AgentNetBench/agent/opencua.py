@@ -79,10 +79,12 @@ class OpenCUA(BaseAgent):
         client: Any,
         *,
         l_number: str = "l2",  # one of: l1, l2, l3, l1_short, l2_short, l3_short
-        history: str = "thought",  # one of: action, thought, observation
+        history: str = "action",  # one of: action, thought, observation (default aligns with eval args)
         image: str = "image_3",  # one of: image_1, image_3, image_5
         max_history_length: int = 10,
         max_detail_length: int = 0,
+        coord_type: str = "qwen25",
+        smart_resize_kwargs: Optional[Dict[str, int]] = None,
     ) -> None:
         super().__init__(model, client)
         self.l_number = l_number
@@ -90,6 +92,13 @@ class OpenCUA(BaseAgent):
         self.image = image
         self.max_history_length = max_history_length
         self.max_detail_length = max_detail_length
+        self.coord_type = coord_type
+        # Defaults per provided eval args
+        self.smart_resize_kwargs = smart_resize_kwargs or {
+            "factor": 28,
+            "min_pixels": 3136,
+            "max_pixels": 12845056,
+        }
 
         # Choose system and response templates
         if l_number == "l1":
@@ -137,6 +146,31 @@ class OpenCUA(BaseAgent):
     @staticmethod
     def _encode_image_bytes(image_bytes: bytes) -> str:
         return base64.b64encode(image_bytes).decode("utf-8")
+
+    def _smart_resize_qwen25(self, width: int, height: int) -> Tuple[int, int]:
+        """Compute resized dimensions following Qwen2.5 style constraints.
+
+        Returns (new_width, new_height).
+        """
+        factor = int(self.smart_resize_kwargs.get("factor", 28))
+        min_pixels = int(self.smart_resize_kwargs.get("min_pixels", 3136))
+        max_pixels = int(self.smart_resize_kwargs.get("max_pixels", 12845056))
+
+        # Round to multiples of factor
+        w_bar = max(1, round(width / factor)) * factor
+        h_bar = max(1, round(height / factor)) * factor
+
+        prod = w_bar * h_bar
+        if prod > max_pixels:
+            beta = (width * height / max_pixels) ** 0.5
+            w_bar = max(1, int((width / beta) // factor) * factor)
+            h_bar = max(1, int((height / beta) // factor) * factor)
+        elif prod < min_pixels:
+            beta = (min_pixels / (width * height)) ** 0.5
+            w_bar = int(((width * beta) + factor - 1) // factor) * factor
+            h_bar = int(((height * beta) + factor - 1) // factor) * factor
+
+        return int(w_bar), int(h_bar)
 
     # ----------------------------- Prompting -----------------------------
     def prompt(self, trajectory: Dict[str, Any], current_step: int) -> List[Dict[str, Any]]:
@@ -252,7 +286,10 @@ class OpenCUA(BaseAgent):
 
     # ----------------------------- Parsing ------------------------------
     def parse_response(self, response: str, trajectory: Optional[Dict[str, Any]] = None, step_idx: Optional[int] = None) -> Optional[str]:
-        """Parse model output, extracting pyautogui/computer lines."""
+        """Parse model output, extracting pyautogui/computer lines.
+
+        Also normalizes absolute pixel coordinates to relative if coord_type is 'qwen25'.
+        """
         if response is None:
             return None
 
@@ -265,7 +302,9 @@ class OpenCUA(BaseAgent):
             if line.startswith("pyautogui.") or line.startswith("computer."):
                 action_lines.append(line)
 
+        # If we already have extracted lines, optionally normalize coordinates
         if action_lines:
+            action_lines = self._maybe_normalize_coordinates(action_lines, trajectory, step_idx)
             return "\n".join(action_lines)
 
         # Second pass: find commands anywhere within lines
@@ -278,7 +317,69 @@ class OpenCUA(BaseAgent):
                 parts = line.split("computer.")
                 action_lines.append("computer." + parts[1].strip())
 
+        action_lines = self._maybe_normalize_coordinates(action_lines, trajectory, step_idx)
         return "\n".join(action_lines) if action_lines else None
+
+    def _maybe_normalize_coordinates(
+        self,
+        action_lines: List[str],
+        trajectory: Optional[Dict[str, Any]],
+        step_idx: Optional[int],
+    ) -> List[str]:
+        """Normalize x,y coordinates for qwen25 if needed, using current step image size.
+
+        Converts pixel coordinates (from resized inputs) to relative [0,1] based on
+        resized width/height computed with smart-resize.
+        """
+        if not action_lines or self.coord_type != "qwen25" or not trajectory or step_idx is None:
+            return action_lines
+
+        steps = trajectory.get("steps", [])
+        if step_idx < 0 or step_idx >= len(steps):
+            return action_lines
+
+        image_file = steps[step_idx].get("image")
+        if not image_file or not self.image_dir:
+            return action_lines
+
+        try:
+            img_bytes = self.load_image(image_file, self.image_dir)
+            img = Image.open(BytesIO(img_bytes))
+            width, height = img.size
+            new_w, new_h = self._smart_resize_qwen25(width, height)
+        except Exception:
+            return action_lines
+
+        normalized: List[str] = []
+        for line in action_lines:
+            if not line.startswith("pyautogui."):
+                normalized.append(line)
+                continue
+
+            # Find x and y
+            m = re.search(r"x=([\d.]+),\s*y=([\d.]+)", line)
+            if not m:
+                normalized.append(line)
+                continue
+
+            try:
+                x_val = float(m.group(1))
+                y_val = float(m.group(2))
+            except ValueError:
+                normalized.append(line)
+                continue
+
+            # Only normalize if looks like pixel coordinates
+            if x_val > 1.0 and y_val > 1.0:
+                rel_x = x_val / float(new_w)
+                rel_y = y_val / float(new_h)
+                # Replace the first occurrence of the coordinate pair
+                new_line = re.sub(r"x=([\d.]+),\s*y=([\d.]+)", f"x={rel_x}, y={rel_y}", line, count=1)
+                normalized.append(new_line)
+            else:
+                normalized.append(line)
+
+        return normalized
 
     # ----------------------- Action extraction --------------------------
     def extract_actions(self, action: str) -> List[Tuple[str, Any]]:
