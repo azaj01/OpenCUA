@@ -34,7 +34,8 @@ the research community needs access to open CUA frameworks to study their capabi
 To bridge this gap, we propose <b>OpenCUA</b>, a comprehensive open-source framework for scaling CUA data and foundation models. 
 Our framework consists of: (1) an annotation infrastructure that seamlessly captures human computer-use demonstrations; 
 (2) <b>AgentNet</b>, the first large-scale computer-use task dataset spanning 3 operating systems and 200+ applications and websites; 
-(3) a scalable pipeline that transforms demonstrations into state–action pairs with reflective long Chain-of-Thought reasoning that sustain robust performance gains as data scales. 
+(3) a scalable pipeline that transforms demonstrations into state–action pairs with reflective long Chain-of-Thought reasoning that sustain robust performance gains as data scales;
+(4) <b>AgentNetBench</b>, an offline evaluator that benchmarks model-predicted low-level actions against ground-truth trajectories.
 Our end-to-end agent models demonstrate strong performance across CUA benchmarks. In particular, <b>OpenCUA-32B</b> achieves an average success rate of 32.5% on **[OSWorld-Verified](https://os-world.github.io/)**, 
 establishing a new state-of-the-art (SOTA) among open-source models and surpassing OpenAI CUA (GPT-4o). 
 Further analysis confirms that our approach generalizes well across domains and benefits significantly from increased test-time computation. 
@@ -71,6 +72,10 @@ The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflect
 
 Empirically, models trained with these rich CoTs scale better with data and generalize across unseen applications.
 
+
+## 5. AgentNetBench – Offline Evaluation
+
+**AgentNetBench** (`./AgentNetBench/`) provides an offline evaluator for UI interaction trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth actions and reports detailed metrics. See [AgentNetBench/README.md](./AgentNetBench/README.md) for usage instructions.
 
 ## License
 
