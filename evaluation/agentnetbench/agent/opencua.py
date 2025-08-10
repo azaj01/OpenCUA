@@ -433,6 +433,12 @@ class OpenCUA(BaseAgent):
                     text = write_match.group(1)
                     actions.append(("write", text))
 
+                # write('...') positional
+                if not write_match:
+                    write_positional = re.search(r"pyautogui\.write\((['\"])(.*?)\1\)", line)
+                    if write_positional:
+                        actions.append(("write", write_positional.group(2)))
+
                 # press/hotkey keys=[...]
                 keys_match = re.findall(r"keys=\[(.*?)\]", line)
                 if keys_match:
@@ -447,6 +453,40 @@ class OpenCUA(BaseAgent):
                         actions.append(("hotkey", normalized_keys))
                     else:
                         actions.append(("press", normalized_keys))
+
+                # hotkey positional: pyautogui.hotkey('ctrl', 'v')
+                if "hotkey(" in line and "keys=" not in line:
+                    inside = re.search(r"pyautogui\.hotkey\((.*)\)", line)
+                    if inside:
+                        arg_str = inside.group(1)
+                        parts = re.findall(r"['\"]([^'\"]+)['\"]", arg_str)
+                        if parts:
+                            normalized_keys = [
+                                ("ctrl" if p.strip().lower() in ("cmd", "command") else p.strip()) for p in parts
+                            ]
+                            actions.append(("hotkey", normalized_keys))
+
+                # press positional: pyautogui.press('enter') or press(['ctrl','v'])
+                if "press(" in line and "keys=" not in line:
+                    inside = re.search(r"pyautogui\.press\((.*)\)", line)
+                    if inside:
+                        arg_str = inside.group(1).strip()
+                        keys: List[str] = []
+                        if arg_str.startswith("["):
+                            parts = re.findall(r"['\"]([^'\"]+)['\"]", arg_str)
+                            keys = [p.strip() for p in parts]
+                        else:
+                            one = re.search(r"['\"]([^'\"]+)['\"]", arg_str)
+                            if one:
+                                keys = [one.group(1).strip()]
+                        if keys:
+                            normalized_keys = [
+                                ("ctrl" if k.lower() in ("cmd", "command") else k) for k in keys
+                            ]
+                            if len(normalized_keys) > 1:
+                                actions.append(("hotkey", normalized_keys))
+                            else:
+                                actions.append(("press", normalized_keys))
 
                 # scroll
                 scroll_match = re.search(r"pyautogui\.scroll\(([-\d]+)\)", line)
