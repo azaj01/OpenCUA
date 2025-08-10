@@ -732,8 +732,8 @@ Previous actions:
                 
             # Handle pyautogui actions
             if line.startswith("pyautogui."):
-                # Extract coordinates for click/moveTo/dragTo actions
-                coord_match = re.search(r"x=([\d.]+),\s*y=([\d.]+)", line)
+                # Extract coordinates for click/moveTo/dragTo actions (allow spaces around '=')
+                coord_match = re.search(r"x\s*=\s*([\d.]+)\s*,\s*y\s*=\s*([\d.]+)", line)
                 if coord_match:
                     x, y = map(float, coord_match.groups())
                     if "click" in line:
