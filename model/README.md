@@ -1,7 +1,3 @@
----
-license: mit
----
-
 
 <h1 style="
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
