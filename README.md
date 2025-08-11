@@ -40,7 +40,7 @@ establishing a new state-of-the-art (SOTA) among open-source models.
 
 </div>
 
-## 2. AgentNetTool – Annotation & Verification Tool
+# AgentNetTool – Annotation & Verification Tool
 Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines.  
 It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations.  
 
@@ -48,7 +48,7 @@ It captures synchronized **screen video**, **mouse/keyboard events**, and **acce
 
 ---
 
-## 3. DataProcessor – Action Reduction & State–Action Matching
+# DataProcessor – Action Reduction & State–Action Matching
 Raw demonstrations can contain thousands of low-level events that are too dense for model training.  
 The **DataProcessor** module (`./DataProcessor/`) performs two key steps:
 
@@ -59,7 +59,7 @@ These processed trajectories underlie all downstream training and evaluation.
 
 ---
 
-## 4. CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Reasoning
+# CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Reasoning
 To boost robustness and interpretability, we augment each trajectory with **reflective long Chain-of-Thought (CoT) reasoning**.  
 The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflections that:
 
@@ -71,17 +71,35 @@ The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflect
 Empirically, models trained with these rich CoTs scale better with data and generalize across unseen applications.
 
 
-## 5. AgentNetBench – Offline Evaluation
+# AgentNetBench – Offline Evaluation
 
 **AgentNetBench** (`./AgentNetBench/`) provides an offline evaluator for UI interaction trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth actions and reports detailed metrics. See [AgentNetBench/README.md](./AgentNetBench/README.md) for usage instructions.
 
-## License
+# Acknowledge
+<p>
+We thank Su Yu, Caiming Xiong, Binyuan Hui, and the anonymous reviewers for their insightful discussions and valuable feedback. 
+We are grateful to Moonshot AI for providing training infrastructure and annotated data. 
+We also sincerely appreciate Calvin, Ziwei Chen, Jin Zhang, Ze Li, Zhengtao Wang, Yanxu Chen, and Qizheng Gu from the Kimi Team for their strong infrastructure support and helpful guidance. 
+The development of our tool is based on the open-source projects-<a href="https://github.com/TheDuckAI/DuckTrack" target="_blank">DuckTrack</a> and <a href="https://github.com/OpenAdaptAI/OpenAdapt" target="_blank">OpenAdapt</a>. 
+We are very grateful to their commitment to the open source community. Finally, we extend our deepest thanks to all annotators for their tremendous effort and contributions to this project.
+</p>
+
+# License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Research Use and Disclaimer
 
-This software is intended for **research and educational purposes only**. 
+OpenCUA is intended for **research and educational purposes only**. 
+
+### Prohibited Uses
+- The model, dataset, tool, and code may **not** be used for any purpose or activity that violates applicable laws or regulations in any jurisdiction
+- Use for illegal, unethical, or harmful activities is strictly prohibited
+
+### Disclaimer
+- The authors, contributors, and copyright holders are **not responsible** for any illegal, unethical, or harmful use of the Software, nor for any direct or indirect damages resulting from such use
+- Use of the "OpenCUA" name, logo, or trademarks does **not** imply any endorsement or affiliation unless separate written permission is obtained
+- Users are solely responsible for ensuring their use complies with applicable laws and regulations
 
 ## Citation
 
@@ -95,5 +113,6 @@ If you use OpenCUA in your research, please cite our work:
   url={https://opencua.xlang.ai/} 
 }
 ```
+
 
 </div>
