@@ -10,17 +10,17 @@
 </h1>
 
 <p align="center">
-  <a href="https://opencua.xlang.ai/">Website</a> •
-  <a href="https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf">Paper</a> •
-  <a href="https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d">Model</a> 
+&nbsp&nbsp🌐 <a href="https://opencua.xlang.ai/">Website</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf">Paper</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/datasets/xlangai/AgentNet">Dataset</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d">Model</a>&nbsp&nbsp | &nbsp&nbsp🔧  <a href="https://agentnet-tool.xlang.ai/">Tool</a>&nbsp&nbsp | &nbsp&nbsp🎮  <a href="https://huggingface.co/spaces/xlangai/OpenCUA-demo">Model Demo</a>&nbsp&nbsp 
 </p>
 
-
+<div align="center">
+  <img src="assets/images/scale_fig.png" width="600" alt="OpenCUA-7B Performance Scaling">
+</div>
 
 <div style="max-width:900px;margin:0 auto;">
 
 
-# 1. Introduction
+# Introduction
 <div style="
   max-width: 880px;              /* 可按需调节整体宽度 */
   margin: 0 auto;               /* 居中容器 */
@@ -28,25 +28,23 @@
   text-justify: inter-word;     /* 优化英文对齐效果 */
   line-height: 1.6;">
   
-Vision-language models have demonstrated impressive capabilities as computer-use agents (CUAs) capable of automating diverse computer tasks. 
-As their commercial potential grows, critical details of the most capable CUA systems remain closed. As these agents will increasingly mediate digital interactions and execute consequential decisions on our behalf, 
-the research community needs access to open CUA frameworks to study their capabilities, limitations, and risks. 
-To bridge this gap, we propose <b>OpenCUA</b>, a comprehensive open-source framework for scaling CUA data and foundation models. 
-Our framework consists of: (1) an annotation infrastructure that seamlessly captures human computer-use demonstrations; 
-(2) <b>AgentNet</b>, the first large-scale computer-use task dataset spanning 3 operating systems and 200+ applications and websites; 
-(3) a scalable pipeline that transforms demonstrations into state–action pairs with reflective long Chain-of-Thought reasoning that sustain robust performance gains as data scales;
-(4) <b>AgentNetBench</b>, an offline evaluator that benchmarks model-predicted low-level actions against ground-truth trajectories.
-Our end-to-end agent models demonstrate strong performance across CUA benchmarks. In particular, <b>OpenCUA-32B</b> achieves an average success rate of 32.5% on **[OSWorld-Verified](https://os-world.github.io/)**, 
-establishing a new state-of-the-art (SOTA) among open-source models and surpassing OpenAI CUA (GPT-4o). 
-Further analysis confirms that our approach generalizes well across domains and benefits significantly from increased test-time computation. 
-We release our annotation tool, datasets, code, and models to build open foundations for further CUA research.
+<b>OpenCUA</b> is a comprehensive open-source framework for scaling CUA data and foundation models, consisting of: 
+- <b>[AgentNet](https://huggingface.co/datasets/xlangai/AgentNet)</b>: the first large-scale computer-use task dataset spanning 3 operating systems and 200+ applications and websites; 
+- **[AgentNetTool](https://agentnet-tool.xlang.ai/)**: an annotation infrastructure that seamlessly captures human computer-use demonstrations; 
+- <b>[AgentNetBench](https://github.com/xlang-ai/OpenCUA/tree/main/AgentNetBench)</b>: an offline evaluator that benchmarks model-predicted low-level actions against ground-truth trajectories.
+- **[OpenCUA Models](https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d")**: end-to-end computer-use foundation models than can produce executable actions in the computer environments with great planning and grounding capabilities.
+
+
+With the help of OpenCUA framework, our end-to-end agent models demonstrate strong performance across CUA benchmarks. In particular, <b>OpenCUA-32B</b> achieves an average success rate of **34.8%** on [OSWorld-Verified](https://os-world.github.io/), 
+establishing a new state-of-the-art (SOTA) among open-source models. 
+
 </div>
 
 ## 2. AgentNetTool – Annotation & Verification Tool
 Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines.  
 It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations.  
 
-👉 **AgentNetTool Document:** <https://agentnet-tool.xlang.ai/>
+👉 **[AgentNetTool Document](https://agentnet-tool.xlang.ai/)**
 
 ---
 
