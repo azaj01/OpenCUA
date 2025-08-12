@@ -268,7 +268,9 @@ Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
   <img src="assets/images/domain_distribution.png" width="400" alt="AgentNet Dataset Domain Distribution">
 </div>
 
-AgentNet is the first large-scale desktop computer-use agent trajectory dataset, containing 22.6K human-annotated computer-use tasks across Windows, macOS, and Ubuntu systems. 👉 **[AgentNet Huggingface Dataset](https://huggingface.co/datasets/xlangai/AgentNet)**
+AgentNet is the first large-scale desktop computer-use agent trajectory dataset, containing 22.6K human-annotated computer-use tasks across Windows, macOS, and Ubuntu systems. 
+
+👉 **[AgentNet Huggingface Dataset](https://huggingface.co/datasets/xlangai/AgentNet)**
 
 Download the dataset here：
 ```
@@ -289,7 +291,9 @@ Collection computer-use agent training data requires 3 steps:
 </div>
 
 
-Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines. It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations. AgentNet Tool is available on Windows, macOS and Ubuntu. 👉 **[AgentNetTool Document](https://agentnet-tool.xlang.ai/)**
+Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines. It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations. AgentNet Tool is available on Windows, macOS and Ubuntu. 
+
+👉 **[AgentNetTool Document](https://agentnet-tool.xlang.ai/)**
 
 
 
