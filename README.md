@@ -19,6 +19,8 @@
 
 <div style="max-width:900px;margin:0 auto;">
 
+## 📢 Updates
+- 2025-08-13: We released our [paper](https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf) and [project page](https://opencua.xlang.ai/). Check it out!
 
 # Introduction
 <div style="
@@ -40,15 +42,258 @@ establishing a new state-of-the-art (SOTA) among open-source models.
 
 </div>
 
-# AgentNetTool – Annotation & Verification Tool
-Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines.  
-It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations.  
 
-👉 **[AgentNetTool Document](https://agentnet-tool.xlang.ai/)**
+
+
+# Performance
+
+### Online Agent Evaluation
+OpenCUA models achieves strong performance on **[OSWorld-Verified](https://os-world.github.io/)**. 
+OPENCUA-32B achieves the best performance among all open-source models with an average success rate of 34.8%, outperforming prior baselines by large margins. 
+It also closes the gap to proprietary Claude models.
+<div align="center">
+
+| **Model**                        | **15 Steps** | **50 Steps** | **100 Steps** |
+|-------------------------------|:--------:|:--------:|:---------:|
+| **Proprietary**               |          |          |           |
+| OpenAI CUA                    | 26.0     | 31.3     | 31.4      |
+| Seed 1.5-VL                   | 27.9     | —        | 34.1      |
+| Claude 3.7 Sonnet             | 27.1     | 35.8     | 35.9      |
+| Claude 4 Sonnet               | 31.2     | 43.9     | 41.5      |
+| **Open-Source**               |          |          |           |
+| Qwen 2.5-VL-32B-Instruct       | 3.0      | —        | 3.9       |
+| Qwen 2.5-VL-72B-Instruct       | 4.4      | —        | 5.0       |
+| Kimi-VL-A3B                   | 9.7      | —        | 10.3      |
+| UI-TARS-72B-DPO               | 24.0     | 25.8     | 27.1      |
+| UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
+| OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
+| **OpenCUA-32B *(Ours)***      | **29.7** | **34.1** | **34.8**  |
+</div>
+
+*OpenCUA scores are the mean of 3 independent runs.*
+
+### GUI Grounding Performance
+<div align="center">
+
+| **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** |
+|-------|-----------|---------------|----------------|
+| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  
+| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 |
+| UI-TARS-72B | 57.1 | 90.3 | 38.1 |
+| **OpenCUA-A3B** | 48.6 | 91.4 | 28.5 |
+| **OpenCUA-7B** | 45.7 | 88.5 | 23.7 |
+| **OpenCUA-2.5-7B** | 55.3 | 92.3 | 50.0 |
+| **OpenCUA-2.5-32B** | **59.6** | **93.4** | **55.3** |
+</div>
+
+
+### AgentNetBench (Offline Evaluation)
+<div align="center">
+
+| **Model** | **Coordinate Actions** | **Content Actions** | **Function Actions** | **Average** |
+|-------|-------------------|-----------------|------------------|---------|
+| Qwen2.5-VL-7B | 50.7 | 40.8 | 3.1 | 48.0 |
+| Qwen2.5-VL-32B | 66.6 | 47.2 | 41.5 | 64.8 |
+| Qwen2.5-VL-72B | 67.2 | 52.6 | 50.5 | 67.0 |
+| OpenAI CUA          | 71.7 | 57.3 | **80.0** | 73.1 |
+| **OpenCUA-2.5-7B**  | 79.0 | 62.0 | 44.3 | 75.2 |
+| **OpenCUA-2.5-32B** | **81.9** | 66.1 | 55.7 | **79.1** |
+</div>
+
+
+#  🚀 Quick Start of OpenCUA Models
+<div style="border-left: 6px solid #f28c28; background: #fff8e6; padding: 12px 16px; margin: 16px 0;">
+  <strong>⚠️ Important for Qwen-based Models (OpenCUA-7B, OpenCUA-32B):</strong>
+  
+  To align with our training infrastructure, we have modified the model in two places:
+  <ul style="margin-top: 8px;">
+    <li>1. Multimodal Rotary Position Embedding (M-RoPE) has been replaced with 1D RoPE</strong>.</li>
+    <li>2. Using the same Tokenizer and ChatTemplate as Kimi-VL.</li>
+    <li>Do not use the default transformers and vllm classes to load the model. Tokenizer and Chat Template should be aligned if training the models.</li>
+  </ul>
+</div>
+
+
+## Installation & Download
+
+First, install the required transformers dependencies:
+
+```bash
+conda create -n opencua python=3.10
+conda activate opencua
+pip install -r requirement.txt
+```
+
+Download the model weight from huggingface:
+```bash
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id="xlangai/OpenCUA-7B",
+    local_dir="OpenCUA-7B",                
+    local_dir_use_symlinks=False  
+)
+```
+
+## 🎯 GUI Grounding 
+
+The following code demonstrates how to use OpenCUA models for GUI grounding tasks:
+
+```python
+import base64
+import torch
+from transformers import AutoTokenizer, AutoModel, AutoImageProcessor
+from PIL import Image
+import json
+
+def encode_image(image_path: str) -> str:
+    """Encode image to base64 string for model input."""
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+def load_opencua_model(model_path: str):
+    """Load OpenCUA model, tokenizer, and image processor."""
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+    model = AutoModel.from_pretrained(
+        model_path, 
+        torch_dtype="auto", 
+        device_map="auto", 
+        trust_remote_code=True
+    )
+    image_processor = AutoImageProcessor.from_pretrained(model_path, trust_remote_code=True)
+    
+    return model, tokenizer, image_processor
+
+def create_grounding_messages(image_path: str, instruction: str):
+    """Create chat messages for GUI grounding task."""
+    system_prompt = (
+        "You are a GUI agent. You are given a task and a screenshot of the screen. "
+        "You need to perform a series of pyautogui actions to complete the task."
+    )
+    
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": f"data:image/png;base64,{encode_image(image_path)}"},
+                {"type": "text", "text": instruction},
+            ],
+        },
+    ]
+    return messages
+
+def run_inference(model, tokenizer, image_processor, messages, image_path):
+    """Run inference on the model."""
+    # Prepare text input
+    input_ids = tokenizer.apply_chat_template(
+        messages, tokenize=True, add_generation_prompt=True
+    )
+    input_ids = torch.tensor([input_ids]).to(model.device)
+    
+    # Prepare image input  
+    image = Image.open(image_path).convert('RGB')
+    image_info = image_processor.preprocess(images=[image])
+    pixel_values = torch.tensor(image_info['pixel_values']).to(
+        dtype=torch.bfloat16, device=model.device
+    )
+    grid_thws = torch.tensor(image_info['image_grid_thw'])
+    
+    # Generate response
+    with torch.no_grad():
+        generated_ids = model.generate(
+            input_ids,
+            pixel_values=pixel_values,
+            grid_thws=grid_thws,
+            max_new_tokens=512,
+            temperature=0
+        )
+    
+    # Decode output
+    prompt_len = input_ids.shape[1]
+    generated_ids = generated_ids[:, prompt_len:]
+    output_text = tokenizer.batch_decode(
+        generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
+    )[0]
+    
+    return output_text
+
+# Example usage
+model_path = "OpenCUA/OpenCUA-7B"  # or other model variants
+image_path = "screenshot.png"
+instruction = "Click on the submit button"
+
+# Load model
+model, tokenizer, image_processor = load_opencua_model(model_path)
+
+# Create messages and run inference
+messages = create_grounding_messages(image_path, instruction)
+result = run_inference(model, tokenizer, image_processor, messages, image_path)
+
+print("Model output:", result)
+```
+
+<div style="border-left: 6px solid #9ca3af; background: #f5f5f5; padding: 12px 16px; margin: 16px 0;">
+  <em>Expected result:</em> ```python\npyautogui.click(x=1443, y=343)\n```
+</div>
+
+You can also run the five grounding examples in [OpenCUA/model/inference/huggingface_inference.py](./inference/huggingface_inference.py):
+``` 
+cd ./model/inference/
+python huggingface_inference.py
+```
+
+## 🖥️ Computer Use Agent
+**[OpenCUAAgent](https://github.com/xlang-ai/OSWorld/blob/main/mm_agents/opencua_agent.py)** is developed in the [OSWorld](https://github.com/xlang-ai/OSWorld) environment based on OpenCUA models. It iteratively perceives the environment via screenshots, produces reflective long CoT as inner monologue, and predicts the next action to be executed. OpenCUAAgent uses 3 images in total and L2 CoT format in default.
+
+Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
+```
+    python run_multienv_opencua.py \
+        --headless \
+        --observation_type screenshot \
+        --model OpenCUA-32B \
+        --result_dir ./results --test_all_meta_path evaluation_examples/test_all_no_gdrive.json \
+        --max_steps 100 \
+        --num_envs 30  \
+        --coordinate_type qwen25
+```
+<div style="border-left: 6px solid #9ca3af; background: #f5f5f5; padding: 12px 16px; margin: 16px 0;">
+  <em>Currently we only supports huggingface inference. We are implementing the vLLM supports of OpenCUA models. Please stay tuned.</em>
+</div>
 
 ---
 
-# DataProcessor – Action Reduction & State–Action Matching
+# AgentNet Dataset - Large-Scale Computer-Use Dataset
+
+<div align="center">
+  <img src="assets/images/domain_distribution.png" width="400" alt="AgentNet Dataset Domain Distribution">
+</div>
+
+AgentNet is the first large-scale desktop computer-use agent trajectory dataset, containing 22.6K human-annotated computer-use tasks across Windows, macOS, and Ubuntu systems. 👉 **[AgentNet Huggingface Dataset](https://huggingface.co/datasets/xlangai/AgentNet)**
+
+Download the dataset here：
+```
+pip install -U huggingface_hub
+huggingface-cli download xlangai/AgentNet --repo-type dataset --local-dir ./AgentNet
+
+```
+
+Collection computer-use agent training data requires 3 steps:
+- Demonstrate human computer-use task via [AgentNetTool](https://agentnet-tool.xlang.ai/);
+- Preprocess the demonstration using [Action Reduction & State-Action Matching](./data/data-processor);
+- For each step, [synthesize reflective long CoT](./data/cot-generator)
+
+
+## 1 AgentNetTool – Annotation & Verification Tool
+<div align="center">
+  <img src="assets/images/agn_tool_fig.png" width="700" alt="AgentNet Tool">
+</div>
+
+
+Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on annotators’ machines. It captures synchronized **screen video**, **mouse/keyboard events**, and **accessibility trees**, then provides an in-browser UI for reviewing, trimming, and submitting demonstrations. AgentNet Tool is available on Windows, macOS and Ubuntu. 👉 **[AgentNetTool Document](https://agentnet-tool.xlang.ai/)**
+
+
+
+## 2 DataProcessor – Action Reduction & State–Action Matching
 Raw demonstrations can contain thousands of low-level events that are too dense for model training.  
 The **DataProcessor** module (`./DataProcessor/`) performs two key steps:
 
@@ -59,7 +304,7 @@ These processed trajectories underlie all downstream training and evaluation.
 
 ---
 
-# CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Reasoning
+## 3 CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Inner Monologue
 To boost robustness and interpretability, we augment each trajectory with **reflective long Chain-of-Thought (CoT) reasoning**.  
 The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflections that:
 
@@ -73,7 +318,23 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 
 # AgentNetBench – Offline Evaluation
 
-**AgentNetBench** (`./AgentNetBench/`) provides an offline evaluator for UI interaction trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth actions and reports detailed metrics. See [AgentNetBench/README.md](./AgentNetBench/README.md) for usage instructions.
+<div align="center">
+  <img src="assets/images/AgentNetBench.png" width="800" alt="AgentNetBench">
+</div>
+
+
+**AgentNetBench** (`./AgentNetBench/`) provides an offline evaluator for UI interaction trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth actions and reports detailed metrics.
+
+👉 See [AgentNetBench/README.md](./AgentNetBench/README.md) for usage instructions.
+
+# TODO
+## vLLM Support
+We are actively working with the vLLM team to add support for OpenCUA models.
+
+**Workaround:** For now, please use the standard transformers library as shown in the examples above. We will update this section once vLLM support becomes available.
+
+## Training Code
+OpenCUA models are developed based on the training infrastructure of Kimi Team. We are developting the training pipeline based on the open-source infrastructure as well.
 
 # Acknowledge
 <p>

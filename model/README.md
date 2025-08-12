@@ -28,7 +28,7 @@
 
 
 
-# 1. Introduction
+#  Introduction
 <div style="
   max-width: 880px;              /* 可按需调节整体宽度 */
   margin: 0 auto;               /* 居中容器 */
@@ -50,7 +50,7 @@ establishing a new state-of-the-art (SOTA) among open-source models and surpassi
 - **Reflective Reasoning**: Enhanced with reflective long Chain-of-Thought that identifies errors and provides corrective reasoning
 
 
-## 2. Performance
+# Performance
 
 ### Online Agent Evaluation
 OpenCUA models achieves strong performance on **[OSWorld-Verified](https://os-world.github.io/)**. 
@@ -236,7 +236,7 @@ print("Model output:", result)
 ```
 
 <div style="border-left: 6px solid #9ca3af; background: #f5f5f5; padding: 12px 16px; margin: 16px 0;">
-  <em>Expected result: ```python\npyautogui.click(x=1443, y=343)\n```
+  <em>Expected result:</em> ```python\npyautogui.click(x=1443, y=343)\n```
 </div>
 
 You can also run the five grounding examples in [OpenCUA/model/inference/huggingface_inference.py](./inference/huggingface_inference.py):
@@ -260,7 +260,7 @@ Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
         --coordinate_type qwen25
 ```
 <div style="border-left: 6px solid #9ca3af; background: #f5f5f5; padding: 12px 16px; margin: 16px 0;">
-  <em>Currently we only supports huggingface inference. We are implementing the vLLM supports of OpenCUA models. Please stay tuned.
+  <em>Currently we only supports huggingface inference. We are implementing the vLLM supports of OpenCUA models. Please stay tuned.</em>
 </div>
 
 ## Important Notes on Coordinate Systems
@@ -317,15 +317,6 @@ Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
       official Qwen2.5-VL implementation</a>.
   </p>
 </div>
-
-# TODO
-## vLLM Support
-We are actively working with the vLLM team to add support for OpenCUA models.
-
-**Workaround:** For now, please use the standard transformers library as shown in the examples above. We will update this section once vLLM support becomes available.
-
-## Training Code
-OpenCUA models are developed based on the training infrastructure of Kimi Team. We are developting the training pipeline based on the open-source infrastructure as well.
 
 ## License
 
