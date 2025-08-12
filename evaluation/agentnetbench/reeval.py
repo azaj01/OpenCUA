@@ -72,6 +72,8 @@ def get_agent_from_dir_name(dir_name: str) -> str:
         return "qwen25vl"
     if "aguvis" in lower_name:
         return "aguvis"
+    if "opencua" in lower_name:
+        return "opencua"
     return None
 
 def reeval_directory(input_dir: Path, output_dir: Path = None):
@@ -95,7 +97,7 @@ def reeval_directory(input_dir: Path, output_dir: Path = None):
     
     if agent_name:
         try:
-            # Only support qwen25vl and aguvis
+            # Support qwen25vl, aguvis, and opencua
             module_name = f"agent.{agent_name}"
             agent_module = importlib.import_module(module_name)
 
@@ -130,6 +132,21 @@ def reeval_directory(input_dir: Path, output_dir: Path = None):
                                 self.history_responses = []
                                 self.history_images = []
 
+                            def load_image(self, image_file, image_dir):
+                                import os
+                                image_path = os.path.join(image_dir, image_file)
+                                with open(image_path, "rb") as f:
+                                    return f.read()
+
+                        agent_instance = DummyParsingAgent(model="dummy")
+                        print(f"Successfully loaded specialized parsing agent for {attr_name}")
+                    elif agent_name.lower() == "opencua":
+                        # Create a specialized dummy parsing agent for opencua (avoid BaseAgent init)
+                        class DummyParsingAgent(attr):
+                            def __init__(self, model, client=None, **kwargs):
+                                self.model = model
+                                self.client = None
+                                self.image_dir = "test_data/images"
                             def load_image(self, image_file, image_dir):
                                 import os
                                 image_path = os.path.join(image_dir, image_file)
