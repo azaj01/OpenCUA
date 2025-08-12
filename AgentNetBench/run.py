@@ -11,6 +11,7 @@ from collections import defaultdict
 from agent.base_agent import BaseAgent
 from agent.aguvis import Aguvis
 from agent.qwen25vl import Qwen25VL
+from agent.opencua import OpenCUA
 from eval import ActionEvaluator
 
 """
@@ -121,9 +122,23 @@ class TrajectoryEvaluator:
             agent_class = Aguvis
             agent = agent_class(self.args.model, client)
 
+        # OpenCUA models
+        elif "opencua" in model_name:
+            print(f"Using OpenCUA agent for model: {self.args.model}")
+            agent_class = OpenCUA
+            agent = agent_class(
+                self.args.model,
+                client,
+                l_number=self.args.opencua_l_number,
+                history=self.args.opencua_history,
+                image=self.args.opencua_image,
+                max_history_length=self.args.opencua_max_history_length,
+                max_detail_length=self.args.opencua_max_detail_length,
+            )
+
         # Unsupported
         else:
-            valid_models = ["aguvis", "qwen2.5-vl", "qwen25vl"]
+            valid_models = ["aguvis", "qwen2.5-vl", "qwen25vl", "opencua"]
             raise ValueError(f"Unsupported model type: {self.args.model}. Valid types include: {', '.join(valid_models)}")
         
         evaluator = ActionEvaluator()
@@ -379,13 +394,28 @@ def main():
     parser.add_argument("--output", type=str, default="./output",
                       help="Output directory for evaluation results")
     parser.add_argument("--model", type=str, default="qwen25vl",
-                      help="Model to use for evaluation (aguvis, qwen25vl)")
+                      help="Model to use for evaluation (aguvis, qwen25vl, opencua)")
     parser.add_argument("--base_url", type=str, default=None,
                       help="Base URL of the hosted model service")
     parser.add_argument("--api_key", type=str, default=None,
                       help="API key for the hosted model service")
     parser.add_argument("--num_cores", type=int, default=10,
                       help="Number of CPU cores to use for parallel processing")
+
+    # OpenCUA-specific options
+    parser.add_argument("--opencua-l-number", dest="opencua_l_number", type=str, default="l2",
+                      choices=["l1", "l2", "l3", "l1_short", "l2_short", "l3_short"],
+                      help="OpenCUA prompt style level")
+    parser.add_argument("--opencua-history", dest="opencua_history", type=str, default="thought",
+                      choices=["action", "thought", "observation"],
+                      help="OpenCUA history mode to include in prompts")
+    parser.add_argument("--opencua-image", dest="opencua_image", type=str, default="image_3",
+                      choices=["image_1", "image_3", "image_5"],
+                      help="How many previous images to include (1/3/5)")
+    parser.add_argument("--opencua-max-history-length", dest="opencua_max_history_length", type=int, default=10,
+                      help="Maximum number of previous steps to include as text history")
+    parser.add_argument("--opencua-max-detail-length", dest="opencua_max_detail_length", type=int, default=0,
+                      help="For last N history steps, include full detailed responses (observation/thought/action/code)")
     
     args = parser.parse_args()
     
