@@ -17,7 +17,6 @@ def encode_image_from_bytes(bytes: str):
 
 
 def encode_image(path: str | bytes | Image.Image):
-    # If the input is bytes, convert it to a PIL.Image
     if isinstance(path, bytes):
         path = Image.open(BytesIO(path))
 
@@ -32,7 +31,6 @@ def encode_image(path: str | bytes | Image.Image):
                 png_image = convert_to_png(image)
                 return base64.b64encode(png_image).decode("utf-8")
     else:
-        # Assume it's already a PIL.Image
         png_image = convert_to_png(path)
         return base64.b64encode(png_image).decode("utf-8")
 
@@ -68,3 +66,4 @@ def get_image_size_from_base64(base64_string):
     image_bytes = base64.b64decode(base64_string)
     image = Image.open(BytesIO(image_bytes))
     return image.size
+
