@@ -276,7 +276,6 @@ Download the dataset here：
 ```
 pip install -U huggingface_hub
 huggingface-cli download xlangai/AgentNet --repo-type dataset --local-dir ./AgentNet
-
 ```
 
 Collection computer-use agent training data requires 3 steps:
@@ -299,7 +298,7 @@ Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on
 
 ## 2 DataProcessor – Action Reduction & State–Action Matching
 Raw demonstrations can contain thousands of low-level events that are too dense for model training.  
-The **DataProcessor** module (`./DataProcessor/`) performs two key steps:
+The **DataProcessor** module (`./data/data-process/`) performs two key steps:
 
 1. **Action Reduction** — merges granular signals into concise, semantically meaningful PyAutoGUI actions (e.g., collapsing mouse moves → click, coalescing scrolls, grouping key-press sequences into text or hotkeys).  
 2. **State–Action Matching** — aligns every reduced action with the *last visually distinct frame* **before** the action begins, avoiding future-information leakage and yielding compact state–action pairs.
@@ -310,7 +309,7 @@ These processed trajectories underlie all downstream training and evaluation.
 
 ## 3 CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Inner Monologue
 To boost robustness and interpretability, we augment each trajectory with **reflective long Chain-of-Thought (CoT) reasoning**.  
-The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflections that:
+The **CoTGenerator** pipeline (`./data/cot-generator/`) synthesizes step-level reflections that:
 
 * reflect on the previous action,
 * explain *why* an action is chosen given the current observation and history,  
@@ -320,16 +319,16 @@ The **CoTGenerator** pipeline (`./CoTGenerator/`) synthesizes step-level reflect
 Empirically, models trained with these rich CoTs scale better with data and generalize across unseen applications.
 
 
-# AgentNetBench – Offline Evaluation
+# Evaluation
 
 <div align="center">
   <img src="assets/images/AgentNetBench.png" width="800" alt="AgentNetBench">
 </div>
 
 
-**AgentNetBench** (`./AgentNetBench/`) provides an offline evaluator for UI interaction trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth actions and reports detailed metrics.
+**AgentNetBench** (`./AgentNetBench/`) provides a realistic offline evaluator for OS agent trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth human actions and reports detailed metrics.
 
-👉 See [AgentNetBench/README.md](./AgentNetBench/README.md) for usage instructions.
+👉 See [AgentNetBench/README.md](./evaluation/agentnetbench/README.md) for usage instructions.
 
 # TODO
 ## vLLM Support
