@@ -220,18 +220,6 @@ CoTGenerator/
 └── environment.yml         # Conda environment specification
 ```
 
-## Citation
-
-If you use this framework in your research, please cite our work:
-
-```bibtex
-@article{your-paper,
-  title={Your Paper Title},
-  author={Your Authors},
-  journal={Your Journal},
-  year={2024}
-}
-```
 
 ## License
 

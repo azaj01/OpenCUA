@@ -278,7 +278,7 @@ pip install -U huggingface_hub
 huggingface-cli download xlangai/AgentNet --repo-type dataset --local-dir ./AgentNet
 ```
 
-Collection computer-use agent training data requires 3 steps:
+Collecting computer-use agent training data requires 3 steps:
 - Demonstrate human computer-use task via [AgentNetTool](https://agentnet-tool.xlang.ai/);
 - Preprocess the demonstration using [Action Reduction & State-Action Matching](./data/data-processor);
 - For each step, [synthesize reflective long CoT](./data/cot-generator)
@@ -328,7 +328,7 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 
 **AgentNetBench** (`./AgentNetBench/`) provides a realistic offline evaluator for OS agent trajectories. It compares model-predicted low-level actions (click, moveTo, write, press, scroll, terminate, etc.) against ground-truth human actions and reports detailed metrics.
 
-👉 See [AgentNetBench/README.md](./evaluation/agentnetbench/README.md) for usage instructions.
+👉 See **[AgentNetBench/README.md](./evaluation/agentnetbench/README.md)** for usage instructions.
 
 # TODO
 ## vLLM Support
