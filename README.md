@@ -20,7 +20,7 @@
 <div style="max-width:900px;margin:0 auto;">
 
 ## 📢 Updates
-- 2025-08-13: We released our [paper](https://github.com/XinyuanWangCS/OpenCUA-Website/blob/main/static/pdf/OpenCUA_arxiv.pdf) and [project page](https://opencua.xlang.ai/). Check it out!
+- 2025-08-13: We released our [paper](https://arxiv.org/abs/2508.09123) and [project page](https://opencua.xlang.ai/). Check it out!
 
 # Introduction
 <div style="
