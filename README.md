@@ -43,65 +43,7 @@ establishing a new state-of-the-art (SOTA) among open-source models.
 </div>
 
 
-
-
-# Performance
-
-### Online Agent Evaluation
-OpenCUA models achieves strong performance on **[OSWorld-Verified](https://os-world.github.io/)**. 
-OPENCUA-32B achieves the best performance among all open-source models with an average success rate of 34.8%, outperforming prior baselines by large margins. 
-It also closes the gap to proprietary Claude models.
-<div align="center">
-
-| **Model**                        | **15 Steps** | **50 Steps** | **100 Steps** |
-|-------------------------------|:--------:|:--------:|:---------:|
-| **Proprietary**               |          |          |           |
-| OpenAI CUA                    | 26.0     | 31.3     | 31.4      |
-| Seed 1.5-VL                   | 27.9     | —        | 34.1      |
-| Claude 3.7 Sonnet             | 27.1     | 35.8     | 35.9      |
-| Claude 4 Sonnet               | 31.2     | 43.9     | 41.5      |
-| **Open-Source**               |          |          |           |
-| Qwen 2.5-VL-32B-Instruct       | 3.0      | —        | 3.9       |
-| Qwen 2.5-VL-72B-Instruct       | 4.4      | —        | 5.0       |
-| Kimi-VL-A3B                   | 9.7      | —        | 10.3      |
-| UI-TARS-72B-DPO               | 24.0     | 25.8     | 27.1      |
-| UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
-| OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
-| **OpenCUA-32B *(Ours)***      | **29.7** | **34.1** | **34.8**  |
-</div>
-
-*OpenCUA scores are the mean of 3 independent runs.*
-
-### GUI Grounding Performance
-<div align="center">
-
-| **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** |
-|-------|-----------|---------------|----------------|
-| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  
-| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 |
-| UI-TARS-72B | 57.1 | 90.3 | 38.1 |
-| **OpenCUA-A3B** | 48.6 | 91.4 | 28.5 |
-| **OpenCUA-7B** | 45.7 | 88.5 | 23.7 |
-| **OpenCUA-2.5-7B** | 55.3 | 92.3 | 50.0 |
-| **OpenCUA-2.5-32B** | **59.6** | **93.4** | **55.3** |
-</div>
-
-
-### AgentNetBench (Offline Evaluation)
-<div align="center">
-
-| **Model** | **Coordinate Actions** | **Content Actions** | **Function Actions** | **Average** |
-|-------|-------------------|-----------------|------------------|---------|
-| Qwen2.5-VL-7B | 50.7 | 40.8 | 3.1 | 48.0 |
-| Qwen2.5-VL-32B | 66.6 | 47.2 | 41.5 | 64.8 |
-| Qwen2.5-VL-72B | 67.2 | 52.6 | 50.5 | 67.0 |
-| OpenAI CUA          | 71.7 | 57.3 | **80.0** | 73.1 |
-| **OpenCUA-2.5-7B**  | 79.0 | 62.0 | 44.3 | 75.2 |
-| **OpenCUA-2.5-32B** | **81.9** | 66.1 | 55.7 | **79.1** |
-</div>
-
-
-#  🚀 Quick Start of OpenCUA Models
+##  🚀 Quick Start of OpenCUA Models
 <div style="border-left: 6px solid #f28c28; background: #fff8e6; padding: 12px 16px; margin: 16px 0;">
   <strong>⚠️ Important for Qwen-based Models (OpenCUA-7B, OpenCUA-32B):</strong>
   
@@ -114,7 +56,7 @@ It also closes the gap to proprietary Claude models.
 </div>
 
 
-## Installation & Download
+### Installation & Download
 
 First, install the required transformers dependencies:
 
@@ -134,7 +76,7 @@ snapshot_download(
 )
 ```
 
-## 🎯 GUI Grounding 
+### 🎯 GUI Grounding 
 
 The following code demonstrates how to use OpenCUA models for GUI grounding tasks:
 
@@ -242,7 +184,7 @@ cd ./model/inference/
 python huggingface_inference.py
 ```
 
-## 🖥️ Computer Use Agent
+### 🖥️ Computer Use Agent
 **[OpenCUAAgent](https://github.com/xlang-ai/OSWorld/blob/main/mm_agents/opencua_agent.py)** is developed in the [OSWorld](https://github.com/xlang-ai/OSWorld) environment based on OpenCUA models. It iteratively perceives the environment via screenshots, produces reflective long CoT as inner monologue, and predicts the next action to be executed. OpenCUAAgent uses 3 images in total and L2 CoT format in default.
 
 Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
@@ -262,7 +204,64 @@ Command for running OpenCUA-7B and OpenCUA-32B in OSWorld:
 
 ---
 
-# AgentNet Dataset - Large-Scale Computer-Use Dataset
+## Performance
+
+### Online Agent Evaluation
+OpenCUA models achieves strong performance on **[OSWorld-Verified](https://os-world.github.io/)**. 
+OPENCUA-32B achieves the best performance among all open-source models with an average success rate of 34.8%, outperforming prior baselines by large margins. 
+It also closes the gap to proprietary Claude models.
+<div align="center">
+
+| **Model**                        | **15 Steps** | **50 Steps** | **100 Steps** |
+|-------------------------------|:--------:|:--------:|:---------:|
+| **Proprietary**               |          |          |           |
+| OpenAI CUA                    | 26.0     | 31.3     | 31.4      |
+| Seed 1.5-VL                   | 27.9     | —        | 34.1      |
+| Claude 3.7 Sonnet             | 27.1     | 35.8     | 35.9      |
+| Claude 4 Sonnet               | 31.2     | 43.9     | 41.5      |
+| **Open-Source**               |          |          |           |
+| Qwen 2.5-VL-32B-Instruct       | 3.0      | —        | 3.9       |
+| Qwen 2.5-VL-72B-Instruct       | 4.4      | —        | 5.0       |
+| Kimi-VL-A3B                   | 9.7      | —        | 10.3      |
+| UI-TARS-72B-DPO               | 24.0     | 25.8     | 27.1      |
+| UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
+| OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
+| **OpenCUA-32B *(Ours)***      | **29.7** | **34.1** | **34.8**  |
+</div>
+
+*OpenCUA scores are the mean of 3 independent runs.*
+
+### GUI Grounding Performance
+<div align="center">
+
+| **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** |
+|-------|-----------|---------------|----------------|
+| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  
+| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 |
+| UI-TARS-72B | 57.1 | 90.3 | 38.1 |
+| **OpenCUA-A3B** | 48.6 | 91.4 | 28.5 |
+| **OpenCUA-7B** | 45.7 | 88.5 | 23.7 |
+| **OpenCUA-2.5-7B** | 55.3 | 92.3 | 50.0 |
+| **OpenCUA-2.5-32B** | **59.6** | **93.4** | **55.3** |
+</div>
+
+
+### AgentNetBench (Offline Evaluation)
+<div align="center">
+
+| **Model** | **Coordinate Actions** | **Content Actions** | **Function Actions** | **Average** |
+|-------|-------------------|-----------------|------------------|---------|
+| Qwen2.5-VL-7B | 50.7 | 40.8 | 3.1 | 48.0 |
+| Qwen2.5-VL-32B | 66.6 | 47.2 | 41.5 | 64.8 |
+| Qwen2.5-VL-72B | 67.2 | 52.6 | 50.5 | 67.0 |
+| OpenAI CUA          | 71.7 | 57.3 | **80.0** | 73.1 |
+| **OpenCUA-2.5-7B**  | 79.0 | 62.0 | 44.3 | 75.2 |
+| **OpenCUA-2.5-32B** | **81.9** | 66.1 | 55.7 | **79.1** |
+</div>
+
+---
+
+## AgentNet Dataset - Large-Scale Computer-Use Dataset
 
 <div align="center">
   <img src="assets/images/domain_distribution.png" width="400" alt="AgentNet Dataset Domain Distribution">
@@ -284,7 +283,7 @@ Collecting computer-use agent training data requires 3 steps:
 - For each step, [synthesize reflective long CoT](./data/cot-generator)
 
 
-## 1 AgentNetTool – Annotation & Verification Tool
+### 1 AgentNetTool – Annotation & Verification Tool
 <div align="center">
   <img src="assets/images/agn_tool_fig.png" width="700" alt="AgentNet Tool">
 </div>
@@ -296,7 +295,7 @@ Our **AgentNetTool** is a cross-platform GUI recorder that runs unobtrusively on
 
 
 
-## 2 DataProcessor – Action Reduction & State–Action Matching
+### 2 DataProcessor – Action Reduction & State–Action Matching
 Raw demonstrations can contain thousands of low-level events that are too dense for model training.  
 The **DataProcessor** module (`./data/data-process/`) performs two key steps:
 
@@ -307,7 +306,7 @@ These processed trajectories underlie all downstream training and evaluation.
 
 ---
 
-## 3 CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Inner Monologue
+### 3 CoTGenerator – Synthesizing Reflective Long Chain-of-Thought Inner Monologue
 To boost robustness and interpretability, we augment each trajectory with **reflective long Chain-of-Thought (CoT) reasoning**.  
 The **CoTGenerator** pipeline (`./data/cot-generator/`) synthesizes step-level reflections that:
 
@@ -319,7 +318,7 @@ The **CoTGenerator** pipeline (`./data/cot-generator/`) synthesizes step-level r
 Empirically, models trained with these rich CoTs scale better with data and generalize across unseen applications.
 
 
-# Evaluation
+## AgentNetBench
 
 <div align="center">
   <img src="assets/images/AgentNetBench.png" width="800" alt="AgentNetBench">
@@ -330,16 +329,17 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 
 👉 See **[AgentNetBench/README.md](./evaluation/agentnetbench/README.md)** for usage instructions.
 
-# TODO
-## vLLM Support
-We are actively working with the vLLM team to add support for OpenCUA models.
+## TODO
+- [ ] **vLLM Support**  
+  - Actively working with the vLLM team to add support for OpenCUA models.  
+  - **Workaround:** For now, use the standard `transformers` library as shown in the examples above.  
+  - Will update this section once vLLM support becomes available.
 
-**Workaround:** For now, please use the standard transformers library as shown in the examples above. We will update this section once vLLM support becomes available.
+- [ ] **Training Code**  
+  - OpenCUA models are developed based on the training infrastructure of Kimi Team.  
+  - Currently developing the training pipeline based on open-source infrastructure.
 
-## Training Code
-OpenCUA models are developed based on the training infrastructure of Kimi Team. We are developting the training pipeline based on the open-source infrastructure as well.
-
-# Acknowledge
+## Acknowledge
 <p>
 We thank Su Yu, Caiming Xiong, Binyuan Hui, and the anonymous reviewers for their insightful discussions and valuable feedback. 
 We are grateful to Moonshot AI for providing training infrastructure and annotated data. 
@@ -347,10 +347,6 @@ We also sincerely appreciate Calvin, Ziwei Chen, Jin Zhang, Ze Li, Zhengtao Wang
 The development of our tool is based on the open-source projects-<a href="https://github.com/TheDuckAI/DuckTrack" target="_blank">DuckTrack</a> and <a href="https://github.com/OpenAdaptAI/OpenAdapt" target="_blank">OpenAdapt</a>. 
 We are very grateful to their commitment to the open source community. Finally, we extend our deepest thanks to all annotators for their tremendous effort and contributions to this project.
 </p>
-
-# License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Research Use and Disclaimer
 
@@ -372,7 +368,7 @@ If you use OpenCUA in your research, please cite our work:
 ```bibtex
 @misc{wang2025opencuaopenfoundationscomputeruse,
       title={OpenCUA: Open Foundations for Computer-Use Agents}, 
-      author={Xinyuan Wang and Bowen Wang and Dunjie Lu and Junlin Yang and Tianbao Xie and Junli Wang and Jiaqi Deng and Xiaole Guo and Yiheng Xu and Chen Henry Wu and Zhennan Shen and Zhuokai Li and Ryan Li and Xiaochuan Li and Junda Chen and Boyuan Zheng and Peihang Li and Fangyu Lei and Ruisheng Cao and Yeqiao Fu and Dongchan Shin and Martin Shin and Jiarui Hu and Yuyan Wang and Jixuan Chen and Yuxiao Ye and Danyang Zhang and Dikang Du and Hao Hu and Huarong Chen and Zaida Zhou and Yipu Wang and Heng Wang and Diyi Yang and Victor Zhong and Flood Sung and Y. Charles and Zhilin Yang and Tao Yu},
+      author={Xinyuan Wang and Bowen Wang and Dunjie Lu and Junlin Yang and Tianbao Xie and Junli Wang and Jiaqi Deng and Xiaole Guo and Yiheng Xu and Chen Henry Wu and Zhennan Shen and Zhuokai Li and Ryan Li and Xiaochuan Li and Junda Chen and Boyuan Zheng and Peihang Li and Fangyu Lei and Ruisheng Cao and Yeqiao Fu and Dongchan Shin and Martin Shin and Jiarui Hu and Yuyan Wang and Jixuan Chen and Yuxiao Ye and Danyang Zhang and Dikang Du and Hao Hu and Huarong Chen and Zaida Zhou and Haotian Yao and Ziwei Chen and Qizheng Gu and Yipu Wang and Heng Wang and Diyi Yang and Victor Zhong and Flood Sung and Y. Charles and Zhilin Yang and Tao Yu},
       year={2025},
       eprint={2508.09123},
       archivePrefix={arXiv},
