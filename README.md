@@ -277,6 +277,17 @@ pip install -U huggingface_hub
 huggingface-cli download xlangai/AgentNet --repo-type dataset --local-dir ./AgentNet
 ```
 
+Use the following command to unzip the file (For exmaple, Ubuntu data):
+```
+cd path_to_your_zip_files
+
+# Merge all the zips
+zip -s 0 images.zip --out images-full.zip
+
+# Unzip
+unzip images-full.zip -d path_to_your_target_dir
+```
+
 Collecting computer-use agent training data requires 3 steps:
 - Demonstrate human computer-use task via [AgentNetTool](https://agentnet-tool.xlang.ai/);
 - Preprocess the demonstration using [Action Reduction & State-Action Matching](./data/data-processor);
