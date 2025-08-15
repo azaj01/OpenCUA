@@ -78,107 +78,7 @@ snapshot_download(
 
 ### 🎯 GUI Grounding 
 
-The following code demonstrates how to use OpenCUA models for GUI grounding tasks:
-
-```python
-import base64
-import torch
-from transformers import AutoTokenizer, AutoModel, AutoImageProcessor
-from PIL import Image
-import json
-
-def encode_image(image_path: str) -> str:
-    """Encode image to base64 string for model input."""
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-def load_opencua_model(model_path: str):
-    """Load OpenCUA model, tokenizer, and image processor."""
-    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    model = AutoModel.from_pretrained(
-        model_path, 
-        torch_dtype="auto", 
-        device_map="auto", 
-        trust_remote_code=True
-    )
-    image_processor = AutoImageProcessor.from_pretrained(model_path, trust_remote_code=True)
-    
-    return model, tokenizer, image_processor
-
-def create_grounding_messages(image_path: str, instruction: str):
-    """Create chat messages for GUI grounding task."""
-    system_prompt = (
-        "You are a GUI agent. You are given a task and a screenshot of the screen. "
-        "You need to perform a series of pyautogui actions to complete the task."
-    )
-    
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": f"data:image/png;base64,{encode_image(image_path)}"},
-                {"type": "text", "text": instruction},
-            ],
-        },
-    ]
-    return messages
-
-def run_inference(model, tokenizer, image_processor, messages, image_path):
-    """Run inference on the model."""
-    # Prepare text input
-    input_ids = tokenizer.apply_chat_template(
-        messages, tokenize=True, add_generation_prompt=True
-    )
-    input_ids = torch.tensor([input_ids]).to(model.device)
-    
-    # Prepare image input  
-    image = Image.open(image_path).convert('RGB')
-    image_info = image_processor.preprocess(images=[image])
-    pixel_values = torch.tensor(image_info['pixel_values']).to(
-        dtype=torch.bfloat16, device=model.device
-    )
-    grid_thws = torch.tensor(image_info['image_grid_thw'])
-    
-    # Generate response
-    with torch.no_grad():
-        generated_ids = model.generate(
-            input_ids,
-            pixel_values=pixel_values,
-            grid_thws=grid_thws,
-            max_new_tokens=512,
-            temperature=0
-        )
-    
-    # Decode output
-    prompt_len = input_ids.shape[1]
-    generated_ids = generated_ids[:, prompt_len:]
-    output_text = tokenizer.batch_decode(
-        generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
-    )[0]
-    
-    return output_text
-
-# Example usage
-model_path = "OpenCUA/OpenCUA-7B"  # or other model variants
-image_path = "screenshot.png"
-instruction = "Click on the submit button"
-
-# Load model
-model, tokenizer, image_processor = load_opencua_model(model_path)
-
-# Create messages and run inference
-messages = create_grounding_messages(image_path, instruction)
-result = run_inference(model, tokenizer, image_processor, messages, image_path)
-
-print("Model output:", result)
-```
-
-<div style="border-left: 6px solid #9ca3af; background: #f5f5f5; padding: 12px 16px; margin: 16px 0;">
-  <em>Expected result:</em> ```python\npyautogui.click(x=1443, y=343)\n```
-</div>
-
-You can also run the five grounding examples in [OpenCUA/model/inference/huggingface_inference.py](./inference/huggingface_inference.py):
+You can run the five grounding examples in [OpenCUA/model/inference/huggingface_inference.py](./inference/huggingface_inference.py):
 ``` 
 cd ./model/inference/
 python huggingface_inference.py
@@ -352,9 +252,9 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 
 ## Acknowledge
 <p>
-We thank Su Yu, Caiming Xiong, Binyuan Hui, and the anonymous reviewers for their insightful discussions and valuable feedback. 
+We thank Su Yu, Caiming Xiong, and the anonymous reviewers for their insightful discussions and valuable feedback. 
 We are grateful to Moonshot AI for providing training infrastructure and annotated data. 
-We also sincerely appreciate Calvin, Ziwei Chen, Jin Zhang, Ze Li, Zhengtao Wang, Yanxu Chen, and Qizheng Gu from the Kimi Team for their strong infrastructure support and helpful guidance. 
+We also sincerely appreciate Hao Yang, Zhengtao Wang, and Yanxu Chen from the Kimi Team for their strong infrastructure support and helpful guidance. 
 The development of our tool is based on the open-source projects-<a href="https://github.com/TheDuckAI/DuckTrack" target="_blank">DuckTrack</a> and <a href="https://github.com/OpenAdaptAI/OpenAdapt" target="_blank">OpenAdapt</a>. 
 We are very grateful to their commitment to the open source community. Finally, we extend our deepest thanks to all annotators for their tremendous effort and contributions to this project.
 </p>
