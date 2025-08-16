@@ -252,7 +252,7 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 
 ## Acknowledge
 <p>
-We thank Su Yu, Caiming Xiong, and the anonymous reviewers for their insightful discussions and valuable feedback. 
+We thank Yu Su, Caiming Xiong, and the anonymous reviewers for their insightful discussions and valuable feedback. 
 We are grateful to Moonshot AI for providing training infrastructure and annotated data. 
 We also sincerely appreciate Hao Yang, Zhengtao Wang, and Yanxu Chen from the Kimi Team for their strong infrastructure support and helpful guidance. 
 The development of our tool is based on the open-source projects-<a href="https://github.com/TheDuckAI/DuckTrack" target="_blank">DuckTrack</a> and <a href="https://github.com/OpenAdaptAI/OpenAdapt" target="_blank">OpenAdapt</a>. 
