@@ -242,6 +242,7 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 👉 See **[AgentNetBench/README.md](./evaluation/agentnetbench/README.md)** for usage instructions.
 
 ## TODO
+- [x] **Release AgentNetTool**  
 - [ ] **vLLM Support**  
   - Actively working with the vLLM team to add support for OpenCUA models.  
   - **Workaround:** For now, use the standard `transformers` library as shown in the examples above.  
