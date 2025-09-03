@@ -20,6 +20,7 @@
 <div style="max-width:900px;margin:0 auto;">
 
 ## 📢 Updates
+- 2025-09-04: We released the code base of [AgentNetTool](https://github.com/xlang-ai/AgentNetTool/tree/main). Welcome to use!
 - 2025-08-13: We released our [paper](https://arxiv.org/abs/2508.09123) and [project page](https://opencua.xlang.ai/). Check it out!
 
 # Introduction
