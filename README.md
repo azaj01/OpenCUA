@@ -10,18 +10,16 @@
 </h1>
 
 <p align="center">
-&nbsp&nbsp🌐 <a href="https://opencua.xlang.ai/">Website</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://arxiv.org/abs/2508.09123">Paper</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/datasets/xlangai/AgentNet">Dataset</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d">Model</a>&nbsp&nbsp | &nbsp&nbsp🔧  <a href="https://github.com/xlang-ai/AgentNetTool/tree/main">Tool</a>&nbsp&nbsp | &nbsp&nbsp🎮  <a href="https://huggingface.co/spaces/xlangai/OpenCUA-demo">Model Demo</a>&nbsp&nbsp 
+&nbsp&nbsp🌐 <a href="https://opencua.xlang.ai/">Website</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://arxiv.org/abs/2508.09123">Paper</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/datasets/xlangai/AgentNet">Dataset</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d">Model</a>&nbsp&nbsp | &nbsp&nbsp🔧  <a href="https://agentnet-tool.xlang.ai/">Tool</a>&nbsp&nbsp | &nbsp&nbsp🎮  <a href="https://huggingface.co/spaces/xlangai/OpenCUA-demo">Model Demo</a>&nbsp&nbsp 
 </p>
 
 <div align="center">
-  <img src="assets/images/scale_fig.png" width="600" alt="OpenCUA-7B Performance Scaling">
+  <img src="assets/images/main_fig.png" width="600" alt="OpenCUA-7B Performance Scaling">
 </div>
 
 <div style="max-width:900px;margin:0 auto;">
 
 ## 📢 Updates
-- 2025-09-19: OpenCUA-32B is now added to [ComputerAgentArena](https://arena.xlang.ai/) as an anonymous agent. Welcome to play with the models!
-- 2025-09-04: We released the code base of [AgentNetTool](https://github.com/xlang-ai/AgentNetTool/tree/main). Welcome to use!
 - 2025-08-13: We released our [paper](https://arxiv.org/abs/2508.09123) and [project page](https://opencua.xlang.ai/). Check it out!
 
 # Introduction
@@ -128,7 +126,8 @@ It also closes the gap to proprietary Claude models.
 | UI-TARS-72B-DPO               | 24.0     | 25.8     | 27.1      |
 | UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
 | OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
-| **OpenCUA-32B *(Ours)***      | **29.7** | **34.1** | **34.8**  |
+| OpenCUA-32B *(Ours)*     | **29.7** | **34.1** | 34.8  |
+| **OpenCUA-72B *(Ours)***      | - | -| **45.0**  |
 </div>
 
 *OpenCUA scores are the mean of 3 independent runs.*
@@ -144,7 +143,8 @@ It also closes the gap to proprietary Claude models.
 | **OpenCUA-A3B** | 48.6 | 91.4 | 28.5 |
 | **OpenCUA-Qwen2-7B** | 45.7 | 88.5 | 23.7 |
 | **OpenCUA-7B** | 55.3 | 92.3 | 50.0 |
-| **OpenCUA-32B** | **59.6** | **93.4** | **55.3** |
+| **OpenCUA-32B** | **59.6** | **93.4** | 55.3 |
+| **OpenCUA-72B** | - | 92.9 | **60.8** |
 </div>
 
 
@@ -243,7 +243,6 @@ Empirically, models trained with these rich CoTs scale better with data and gene
 👉 See **[AgentNetBench/README.md](./evaluation/agentnetbench/README.md)** for usage instructions.
 
 ## TODO
-- [x] **Release AgentNetTool**  
 - [ ] **vLLM Support**  
   - Actively working with the vLLM team to add support for OpenCUA models.  
   - **Workaround:** For now, use the standard `transformers` library as shown in the examples above.  
