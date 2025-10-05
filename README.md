@@ -39,7 +39,7 @@
 - **[OpenCUA Models](https://huggingface.co/collections/xlangai/opencua-open-foundations-for-computer-use-agents-6882014ebecdbbe46074a68d")**: end-to-end computer-use foundation models than can produce executable actions in the computer environments with great planning and grounding capabilities.
 
 
-With the help of OpenCUA framework, our end-to-end agent models demonstrate strong performance across CUA benchmarks. In particular, <b>OpenCUA-32B</b> achieves an average success rate of **34.8%** on [OSWorld-Verified](https://os-world.github.io/), 
+With the help of OpenCUA framework, our end-to-end agent models demonstrate strong performance across CUA benchmarks. In particular, <b>OpenCUA-72B-preview</b> achieves an average success rate of **45.0%** on [OSWorld-Verified](https://os-world.github.io/), 
 establishing a new state-of-the-art (SOTA) among open-source models. 
 
 </div>
@@ -47,7 +47,7 @@ establishing a new state-of-the-art (SOTA) among open-source models.
 
 ##  🚀 Quick Start of OpenCUA Models
 <div style="border-left: 6px solid #f28c28; background: #fff8e6; padding: 12px 16px; margin: 16px 0;">
-  <strong>⚠️ Important for Qwen-based Models (OpenCUA-7B, OpenCUA-32B):</strong>
+  <strong>⚠️ Important for Qwen-based Models (OpenCUA-7B, OpenCUA-32B, OpenCUA-72B):</strong>
   
   To align with our training infrastructure, we have modified the model in two places:
   <ul style="margin-top: 8px;">
@@ -129,7 +129,7 @@ It also closes the gap to proprietary Claude models.
 | UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
 | OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
 | OpenCUA-32B *(Ours)*     | **29.7** | **34.1** | 34.8  |
-| **OpenCUA-72B *(Ours)***      | - | -| **45.0**  |
+| **OpenCUA-72B-preview *(Ours)***      | - | -| **45.0**  |
 </div>
 
 *OpenCUA scores are the mean of 3 independent runs.*
@@ -137,16 +137,14 @@ It also closes the gap to proprietary Claude models.
 ### GUI Grounding Performance
 <div align="center">
 
-| **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** |
+| **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** | **UI-Vision** |
 |-------|-----------|---------------|----------------|
-| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  
-| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 |
-| UI-TARS-72B | 57.1 | 90.3 | 38.1 |
-| **OpenCUA-A3B** | 48.6 | 91.4 | 28.5 |
-| **OpenCUA-Qwen2-7B** | 45.7 | 88.5 | 23.7 |
-| **OpenCUA-7B** | 55.3 | 92.3 | 50.0 |
-| **OpenCUA-32B** | **59.6** | **93.4** | 55.3 |
-| **OpenCUA-72B** | - | 92.9 | **60.8** |
+| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  0.85 |
+| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 | - |
+| UI-TARS-72B | 57.1 | 90.3 | 38.1 | 25.5 |
+| **OpenCUA-7B** | 55.3 | 92.3 | 50.0 | 29.7 |
+| **OpenCUA-32B** | **59.6** | **93.4** | 55.3 | 33.3 |
+| **OpenCUA-72B-preview** | 59.2 | 92.9 | **60.8** | **37.3** |
 </div>
 
 
