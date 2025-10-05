@@ -1,0 +1,4 @@
+[submodule "tool"]
+	path = tool
+	url = https://github.com/xlang-ai/AgentNetTool.git
+	branch = main
