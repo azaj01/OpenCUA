@@ -129,7 +129,7 @@ It also closes the gap to proprietary Claude models.
 | UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
 | OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
 | OpenCUA-32B *(Ours)*          | **29.7** | **34.1** | 34.8      |
-| **OpenCUA-72B-preview *(Ours)***      | -   | -  | **45.0**  |
+| **OpenCUA-72B-preview *(Ours)***      | 39.0   | 44.9  | **45.0**  |
 </div>
 
 *OpenCUA scores are the mean of 3 independent runs.*
@@ -138,11 +138,11 @@ It also closes the gap to proprietary Claude models.
 <div align="center">
 
 | **Model** | **OSWorld-G** | **ScreenSpot-V2** | **ScreenSpot-Pro** | **UI-Vision** |
-|-------|-----------|---------------|----------------|
-| Qwen2.5-VL-7B | 31.4 | 88.8 | 27.6 |  0.85 |
-| Qwen2.5-VL-32B | 46.5 | 87.0 | 39.4 | - |
-| UI-TARS-72B | 57.1 | 90.3 | 38.1 | 25.5 |
-| **OpenCUA-7B** | 55.3 | 92.3 | 50.0 | 29.7 |
+|-------|-----------|---------------|----------------| ---------- |
+| Qwen2.5-VL-7B   | 31.4 | 88.8 | 27.6 |  0.85 |
+| Qwen2.5-VL-32B  | 46.5 | 87.0 | 39.4 | - |
+| UI-TARS-72B     | 57.1 | 90.3 | 38.1 | 25.5 |
+| **OpenCUA-7B**  | 55.3 | 92.3 | 50.0 | 29.7 |
 | **OpenCUA-32B** | **59.6** | **93.4** | 55.3 | 33.3 |
 | **OpenCUA-72B-preview** | 59.2 | 92.9 | **60.8** | **37.3** |
 </div>
