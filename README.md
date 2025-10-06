@@ -122,14 +122,14 @@ It also closes the gap to proprietary Claude models.
 | Claude 3.7 Sonnet             | 27.1     | 35.8     | 35.9      |
 | Claude 4 Sonnet               | 31.2     | 43.9     | 41.5      |
 | **Open-Source**               |          |          |           |
-| Qwen 2.5-VL-32B-Instruct       | 3.0      | —        | 3.9       |
-| Qwen 2.5-VL-72B-Instruct       | 4.4      | —        | 5.0       |
+| Qwen 2.5-VL-32B-Instruct      | 3.0      | —        | 3.9       |
+| Qwen 2.5-VL-72B-Instruct      | 4.4      | —        | 5.0       |
 | Kimi-VL-A3B                   | 9.7      | —        | 10.3      |
 | UI-TARS-72B-DPO               | 24.0     | 25.8     | 27.1      |
 | UI-TARS-1.5-7B                | 24.5     | 27.3     | 27.4      |
 | OpenCUA-7B *(Ours)*           | 24.3     | 27.9     | 26.6      |
-| OpenCUA-32B *(Ours)*     | **29.7** | **34.1** | 34.8  |
-| **OpenCUA-72B-preview *(Ours)***      | - | -| **45.0**  |
+| OpenCUA-32B *(Ours)*          | **29.7** | **34.1** | 34.8      |
+| **OpenCUA-72B-preview *(Ours)***      | -   | -  | **45.0**  |
 </div>
 
 *OpenCUA scores are the mean of 3 independent runs.*
