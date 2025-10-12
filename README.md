@@ -20,7 +20,12 @@
 <div style="max-width:900px;margin:0 auto;">
 
 ## 📢 Updates
-- 2025-10-03: <span style="color:red; font-weight:bold">New OpenCUA model!</span>🔥 [OpenCUA-72B-preview](https://huggingface.co/xlangai/OpenCUA-72B-preview) now ranks #1 on the [OSWorld-Verified leaderboard](https://os-world.github.io/). It also has strong grounding ability, 37.3% (SOTA) on UI-Vision 
+- 2025-10-12:  <span style="font-weight:bold">[OpenCUA-7B-exl2](https://huggingface.co/sujitvasanth/OpenCUA-7B-exl2) is now live!</span> ⚡️  
+  Thanks to [Sujit Vasanth](https://huggingface.co/sujitvasanth) for producing a quantized **exllamav2** version of OpenCUA-7B — enabling much faster inference with lower VRAM usage.  
+
+
+- 2025-10-03: <span style="color:red; font-weight:bold">New OpenCUA model!</span>🔥 
+[OpenCUA-72B-preview](https://huggingface.co/xlangai/OpenCUA-72B-preview) now ranks #1 on the [OSWorld-Verified leaderboard](https://os-world.github.io/). It also has strong grounding ability, 37.3% (SOTA) on UI-Vision 
  and 60.8% on ScreenSpot-Pro.
 - 2025-08-13: We released our [paper](https://arxiv.org/abs/2508.09123) and [project page](https://opencua.xlang.ai/). Check it out!
 
